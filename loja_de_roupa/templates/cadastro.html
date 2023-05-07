@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block body %}
+        <form method="POST">
+          <h2>Cadastro</h2>
+
+            {{ form_cadastro_usuario.usuario.label(for="username") }}
+            {{ form_cadastro_usuario.usuario(id="username") }}
+
+            {{ form_cadastro_usuario.senha.label() }}
+            {{ form_cadastro_usuario.senha() }}
+
+            {{ form_cadastro_usuario.confirmacao.label() }}
+            {{ form_cadastro_usuario.confirmacao() }}
+
+            {{ form_cadastro_usuario.email.label(for="email") }}
+            {{ form_cadastro_usuario.email(id="email",type="email") }}
+
+            {{ form_cadastro_usuario.submit_cadastro_usuario() }}
+        </form>
+{% endblock %}

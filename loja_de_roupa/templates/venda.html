@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block body %}
+        <form method="POST">
+          <h2>Vendas</h2>
+
+          {{ venda_form.roupa_venda.label() }}
+            <select id="roupa_nome" name="roupa_venda">
+                <option value="" disabled selected>Selecione a roupa:</option>
+                {% for r in roupas %}
+                <option value="{{ r.valor }}">{{ r.nome_roupa.lower().capitalize() }}</option>
+                {% endfor %}
+                </select><br><br>
+             {{ venda_form.roupa_vendida(value="",style="display:none;") }}
+
+            {{ venda_form.qtd_estoque_venda.label(for="username9") }}
+            {{ venda_form.qtd_estoque_venda(id="username9") }}
+
+            {{ venda_form.valor_total.label(id="cavalo") }}
+
+            {{ venda_form.submit_venda() }}
+        </form>
+<script>
+var select = document.getElementById('roupa_nome');
+var quantidade = document.getElementById('username9');
+var valorTotal = document.getElementById('cavalo');
+
+select.addEventListener("change", (event) => {
+ var option = select.options[select.selectedIndex];
+  var valor = option.value;
+  console.log(valor);
+  var valorTotalCalculado = parseFloat(valor) * parseFloat(quantidade.value);
+  if (isNaN(valorTotalCalculado)) {
+  valorTotalCalculado = 0;
+  }
+  const select1 = document.getElementById('roupa_nome');
+   const select2 = document.getElementById('roupa_vendida');
+const opcoes = select.getElementsByTagName('option');
+var textoSelecionado = select.options[select.selectedIndex].text;
+console.log(textoSelecionado);
+for (let i = 0; i < opcoes.length; i++) {
+console.log(opcoes[i].textContent);
+       if (opcoes[i].textContent === textoSelecionado){
+        select2.setAttribute('value', opcoes[i].textContent);
+        opcoes[i].setAttribute('selected', 'selected');
+        break;
+}
+}
+  valorTotal.textContent = "Valor Total: R$" + valorTotalCalculado.toFixed(2);
+});
+
+quantidade.addEventListener("input", (event) => {
+ var option = select.options[select.selectedIndex];
+  var valor = option.value;
+  console.log(valor);
+  var valorTotalCalculado = parseFloat(valor) * parseFloat(quantidade.value);
+  if (isNaN(valorTotalCalculado)) {
+  valorTotalCalculado = 0;
+}
+  valorTotal.textContent = "Valor Total: R$" + valorTotalCalculado.toFixed(2);
+
+});
+</script>
+{% endblock %}

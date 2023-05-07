@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div style="display: flex;flex-direction: wrap;justify-content: center;">
+  <div style="display: flex;flex-direction: column;align-content: center;align-items: center;width: 50vw; margin: 0px;" >
+  <button id="add-roupa-btn" style="width: 562px;">Adicionar Roupa
+  <img src="{{ url_for('static', filename='wardrobe.png') }}" style="width:50px;height:50px; margin-left:10px;" alt="Texto alternativo"></button>
+  <div id="add-roupa-modal">
+    <div class="modal">
+            
+              <form method="POST" style="margin-top: 0px;width: 360px; ">
+                {{ gerenciamento.nome_roupa_adc.label(for="username") }}
+                {{ gerenciamento.nome_roupa_adc(id="username") }}
+
+                 {{ gerenciamento.valor.label(for="valor") }}
+                 {{ gerenciamento.valor(id="valor") }}
+
+                 {{ gerenciamento.tamanho.label(for="tamanho") }}
+                 {{ gerenciamento.tamanho(id="tamanho") }}
+
+                {{ gerenciamento.categoria.label(for="categoria") }}
+                <select name="categoria">
+                {% for o in data %}
+                <option value="{{ o.name }}">{{ o.name }}</option>
+                {% endfor %}
+                    {% for c in categoria %}
+                <option value="{{ c.categoria }}">{{ c.categoria.lower().capitalize() }}</option>
+                {% endfor %}
+                </select><br><br>
+                {{ gerenciamento.estoque.label(for="estoque") }}
+                 {{ gerenciamento.estoque(id="estoque") }}
+                {{ gerenciamento.submit_adc_roupa() }}
+              </form>
+            </div>
+        </div>
+  </div>
+</div>
+<div id="del-usuario-modal">
+    <div class="modal">
+              <form method="POST" style="margin-top: 0px;width: 360px; ">
+                {{ gerenciamento.nome_usuario_del.label(for="username2") }}
+                {{ gerenciamento.nome_usuario_del(id="username2") }}<br><br>
+                {{ gerenciamento.submit_del_usuario() }}
+              </form>
+
+        </div>
+    </div>
+<div style="display: flex;flex-direction: wrap;">
+        <div style="display: flex;flex-direction: column;align-content: center;align-items: center;width: 50vw; margin: 0px;" >
+            <button id="rem-roupa-btn" onclick="toggleFormRem()">Remover Roupa</button>
+            <div id="rem-roupa-form" style="display: none;">
+              <form method="POST" style="margin-top: 0px;width: 360px; ">
+                {{ gerenciamento.nome_roupa_del.label(for="username1") }}
+                {{ gerenciamento.nome_roupa_del(id="username1") }}<br><br>
+                 {{ gerenciamento.submit_del_roupa() }}
+              </form>
+            </div>
+        </div>
+
+        <div style="display: flex;flex-direction: column;align-content: center;align-items: center;width: 50vw; margin: 0px;" >
+          <button id="add-categoria-btn" onclick="toggleFormAddCat()">Gerenciar Categoria</button>
+          <div id="add-categoria-form" style="display: none;">
+            <form method="POST" style="margin-top: 0px;width: 360px; ">
+
+              {{ gerenciamento.nome_categoria_add.label(for="username3") }}
+              {{ gerenciamento.nome_categoria_add(id="username3") }}<br><br>
+              {{ gerenciamento.submit_add_categoria() }}<br><br>
+
+                {{ gerenciamento.nome_categoria_del.label(for="username4") }}
+            {{ gerenciamento.nome_categoria_del(id="username4") }}<br><br>
+            {{ gerenciamento.submit_del_categoria() }}
+            </form>
+          </div>
+      </div>
+
+
+    <div style="display: flex;flex-direction: column;align-content: center;align-items: center;width: 50vw; margin: 0px;" >
+      <button id="add-estoque-btn" onclick="toggleFormAddEst()">Gerenciar Estoque</button>
+      <div id="add-estoque-form" style="display: none;">
+        <form method="POST" style="margin-top: 0px;width: 360px; ">
+            <h2>Adicionar Estoque</h2>
+          {{ gerenciamento.nome_estoque_add.label(for="username5") }}
+          {{ gerenciamento.nome_estoque_add(id="username5") }}
+            {{ gerenciamento.qtd_estoque_add.label(for="username6") }}
+        {{ gerenciamento.qtd_estoque_add(id="username6") }}<br><br>
+          {{ gerenciamento.submit_add_estoque() }}
+            <h2 style="margin:30px;">Remover Estoque</h2>
+            {{ gerenciamento.nome_estoque_del.label(for="username7") }}
+        {{ gerenciamento.nome_estoque_del(id="username7") }}
+          {{ gerenciamento.qtd_estoque_del.label(for="username8") }}
+        {{ gerenciamento.qtd_estoque_del(id="username8") }}<br><br>
+        {{ gerenciamento.submit_del_estoque() }}
+        </form>
+      </div>
+  </div>
+
+    </div>
+        <table style="width: 100%; margin-top: 30px;">
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>Nome da Roupa</th>
+                <th>Categoria</th>
+                  <th>Valor</th>
+                <th>Estoque</th>
+                <th>Tamanho</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for r in roupas %}
+                <tr>
+                    <th>{{ r.id }}</th>
+                    <th>{{ r.nome_roupa }}</th>
+                     <th>{{ r.categoria }}</th>
+                    <th>R$ {{ r.valor }}</th>
+                    <th>{{ r.estoque }}</th>
+                     <th>{{ r.tamanho }}</th>
+                </tr>
+                 {% endfor %}
+            </tbody>
+          </table>
+          </li>
+        </ul>
+   
+{% endblock %}

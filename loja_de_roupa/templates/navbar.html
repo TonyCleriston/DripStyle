@@ -1,0 +1,18 @@
+<nav>
+    <div class="logo">
+      <a href="#"><img src="{{ url_for('static', filename='pano.png') }}" alt="Logo da loja"></a>
+    </div>
+    <ul class="nav-links">
+       {% if current_user %}
+  {% if current_user.is_authenticated %}
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    <li><a href="{{ url_for('cadastro') }}">Cadastro</a></li>
+    <li><a href="{{ url_for('roupas') }}">Gerenciamento das Roupas</a></li>
+    <li><a id="del-usuario-btn">Remover Usuário</a></li>
+         <li><a href="{{ url_for('vendas') }}">Vendas</a></li>
+  {% else %}
+    <li><a href="{{ url_for('login') }}">Login</a></li>
+  {% endif %}
+{% endif %}
+    </ul>
+</nav>

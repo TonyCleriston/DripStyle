@@ -1,0 +1,116 @@
+<html lang="pt-BR">
+    <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Loja de Roupa</title>
+</head>
+    <body>
+        {% include 'navbar.html' %}
+        <div class="container">
+            {% with mensagens = get_flashed_messages(with_categories=True) %}
+                {% if mensagens %}
+                    {% for categoria, mensagem in mensagens %}
+                        <div class="alert {{ categoria }}">
+                            {{ mensagem }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        {% block body %}
+
+        {% endblock %}
+
+        <script>
+        function toggleForm() {
+          var form = document.getElementById("add-roupa-form");
+          var btn = document.getElementById("add-roupa-btn");
+          if (form.style.display === "none") {
+            form.style.display = "block";
+            btn.innerHTML = "Fechar";
+          } else {
+            form.style.display = "none";
+            btn.innerHTML = "Adicionar Roupa";
+          }
+        }
+        function toggleFormRem() {
+          var form = document.getElementById("rem-roupa-form");
+          var btn = document.getElementById("rem-roupa-btn");
+          if (form.style.display === "none") {
+            form.style.display = "block";
+            btn.innerHTML = "Fechar";
+          } else {
+            form.style.display = "none";
+            btn.innerHTML = "Remover Roupa";
+          }
+        }
+        function toggleFormRemUsu() {
+          var form = document.getElementById("rem-usuario-form");
+          var btn = document.getElementById("rem-usuario-btn");
+          if (form.style.display === "none") {
+            form.style.display = "block";
+            btn.innerHTML = "Fechar";
+          } else {
+            form.style.display = "none";
+            btn.innerHTML = "Remover Usuário";
+          }
+        }
+        function toggleFormAddCat() {
+          var form = document.getElementById("add-categoria-form");
+          var btn = document.getElementById("add-categoria-btn");
+          if (form.style.display === "none") {
+            form.style.display = "block";
+            btn.innerHTML = "Fechar";
+          } else {
+            form.style.display = "none";
+            btn.innerHTML = "Gerenciar Categoria";
+          }
+        }
+
+        function toggleFormAddEst() {
+          var form = document.getElementById("add-estoque-form");
+          var btn = document.getElementById("add-estoque-btn");
+          if (form.style.display === "none") {
+            form.style.display = "block";
+            btn.innerHTML = "Fechar";
+          } else {
+            form.style.display = "none";
+            btn.innerHTML = "Gerenciar Estoque";
+          }
+        }
+
+
+var addRoupaBtn = document.getElementById("add-roupa-btn");
+var addRoupaModal = document.getElementById("add-roupa-modal");
+function toggleModal() {
+  addRoupaModal.style.display = (addRoupaModal.style.display == "none") ? "flex" : "none";
+  addRoupaModal.style.display = "flex";
+}
+addRoupaBtn.addEventListener("click", toggleModal);
+document.addEventListener('click', function(event) {
+  var modal = document.getElementById('add-roupa-modal');
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+});
+var delusuariobtn = document.getElementById("del-usuario-btn");
+var delusuariomodal = document.getElementById("del-usuario-modal");
+function toggleModal1() {
+  delusuariomodal.style.display = (delusuariomodal.style.display == "none") ? "flex" : "none";
+  delusuariomodal.style.display = "flex";
+}
+delusuariobtn.addEventListener("click", toggleModal1);
+document.addEventListener('click', function(event) {
+  var modal = document.getElementById('del-usuario-modal');
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+});
+
+
+
+</script>
+    </body>
+</html>

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block body %}
+        <form method="POST">
+          <h2>Login</h2>
+            {{ form_login.usuario.label(for="username") }}
+            {{ form_login.usuario(id="username") }}
+
+            {{ form_login.senha.label(for="password") }}
+            {{ form_login.senha(id="password") }}
+
+            {{ form_login.submit_entrar() }}
+        </form>
+{% endblock %}
