@@ -20,3 +20,17 @@ class Roupas(database.Model):
 class Categoria(database.Model):
     id_categoria = database.Column(database.Integer, primary_key=True)
     nome_categoria = database.Column(database.String, nullable=False, unique=True)
+
+class Promocao(database.Model):
+    id_promo = database.Column(database.Integer, primary_key=True)
+    porcentagem = database.Column(database.String, nullable=False)
+    tipo_pagamento = database.Column(database.String, nullable=False)
+
+class Vendas(database.Model):
+    id_venda = database.Column(database.Integer, primary_key=True)
+    roupas_fk = database.Column(database.String, nullable=False)
+    nome_cliente = database.Column(database.String, nullable=False)
+    endereco = database.Column(database.String, nullable=False)
+    valor_venda = database.Column(database.Float, nullable=False)
+
+

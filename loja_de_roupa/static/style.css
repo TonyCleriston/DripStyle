@@ -1,3 +1,7 @@
+a{
+all: unset;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -8,7 +12,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #292929;
+    background-color: #000000;
     color: #fff;
     
   }
@@ -268,3 +272,140 @@
  .alert-success{color:#155724;background-color:#d4edda;border-color:#c3e6cb;text-align: center;}
 
  .alert-danger{color:#721624;background-color:#f8d7da;border-color:#f5c6cb;text-align: center;}
+
+ footer {
+    background-color: #000000;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    text-align: center;
+    font-size: 0.8em;
+    padding: 5px;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    font-weight: bolder;
+}
+
+footer a:hover {
+    text-decoration: underline;
+    color: #585757;
+}
+.alert {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.sidebar {
+  background: rgb(0 0 0 / 80%);
+  width: 70px;
+  height: 100%;
+  position: fixed;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  color: #fff;
+  transition: width 0.3s;
+}
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.sidebar.active {
+  width: 304px;
+}
+
+.sidebar-word {
+all: unset;
+  margin-left:17px;
+  top: 0;
+  left: 100%;
+
+  padding-left: 10px;
+  font-size: 19px;
+  width:30vw;
+  margin-top:22px;
+}
+
+.sidebar-toggle {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bar {
+  background: #fff;
+  width: 20px;
+  height: 2px;
+  margin-bottom: 4px;
+}
+
+.sidebar-menu {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: none;
+}
+
+
+.sidebar.active .sidebar-menu {
+  display: block;
+
+}
+
+.sidebar-menu li {
+  margin-bottom: 10px;
+}
+
+.sidebar-menu a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.content {
+  margin-left: 60px;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 20px;
+  }
+
+  .content {
+    margin-left: 0;
+    padding: 20px;
+  }
+}
+.sidebar-logo {
+  font-size: 24px;
+  font-weight: bold;
+  position: relative;
+  margin-top:13px;
+ display: flex;
+padding-left:5px;
+height:62px;
+border-radius: 0 55px 55px 0;
+width:304px;
+
+}
+.sidebar-logo:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+.sidebar-logo.active {
+  background-color: rgb(82 102 223 / 80%);
+}
+
+
+

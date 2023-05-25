@@ -10,26 +10,66 @@
                 {% for r in roupas %}
                 <option value="{{ r.valor }}">{{ r.nome_roupa.lower().capitalize() }}</option>
                 {% endfor %}
-                </select><br><br>
+                </select>
              {{ venda_form.roupa_vendida(value="",style="display:none;") }}
 
             {{ venda_form.qtd_estoque_venda.label(for="username9") }}
             {{ venda_form.qtd_estoque_venda(id="username9") }}
 
+            {{ venda_form.tipo_pagamento.label() }}
+            <select id="tipo_pagamento" name="tipo_pagamento">
+                <option value="" disabled selected>Selecione a forma de pagamento:</option>
+                {% for t in tipo %}
+                <option value="{{ t.porcentagem }}">{{ t.tipo_pagamento.lower().capitalize() }}</option>
+                {% endfor %}
+                </select>
+
+            {{ venda_form.nome_cliente.label(for="username10") }}
+            {{ venda_form.nome_cliente(id="username10") }}
+
+            {{ venda_form.endereco.label(for="username11") }}
+            {{ venda_form.endereco(id="username11") }}
+
             {{ venda_form.valor_total.label(id="cavalo") }}
+             {{ venda_form.valor_total(value="",style="display:none;",id="cavalo2") }}
 
             {{ venda_form.submit_venda() }}
         </form>
 <script>
+  var currentPage = 'pagina3';
+
+  // Função para manipular a barra lateral
+  function handleSidebar() {
+    var sidebarLogos = document.querySelectorAll('.sidebar-logo');
+
+    for (var i = 0; i < sidebarLogos.length; i++) {
+      var sidebarLogo = sidebarLogos[i];
+
+      if (sidebarLogo.dataset.page === currentPage) {
+        sidebarLogo.classList.add('active');
+      } else {
+        sidebarLogo.classList.remove('active');
+      }
+    }
+  }
+
+  // Chamar a função após definir a variável currentPage
+  handleSidebar();
+</script>
+<script>
 var select = document.getElementById('roupa_nome');
 var quantidade = document.getElementById('username9');
+var tipo = document.getElementById('tipo_pagamento');
 var valorTotal = document.getElementById('cavalo');
+var valorTotalPromocao = document.getElementById('cavalo2');
 
 select.addEventListener("change", (event) => {
  var option = select.options[select.selectedIndex];
+ var option1 = tipo.options[tipo.selectedIndex];
   var valor = option.value;
+  var valor1 = option1.value;
   console.log(valor);
-  var valorTotalCalculado = parseFloat(valor) * parseFloat(quantidade.value);
+  var valorTotalCalculado = (parseFloat(valor) * parseFloat(quantidade.value)) * (1 - parseFloat(valor1));
   if (isNaN(valorTotalCalculado)) {
   valorTotalCalculado = 0;
   }
@@ -47,17 +87,51 @@ console.log(opcoes[i].textContent);
 }
 }
   valorTotal.textContent = "Valor Total: R$" + valorTotalCalculado.toFixed(2);
+  valorTotalPromocao.value = valorTotalCalculado.toFixed(2);
 });
 
 quantidade.addEventListener("input", (event) => {
  var option = select.options[select.selectedIndex];
+ var option1 = tipo.options[tipo.selectedIndex];
   var valor = option.value;
+  var valor1 = option1.value;
   console.log(valor);
-  var valorTotalCalculado = parseFloat(valor) * parseFloat(quantidade.value);
+  var valorTotalCalculado = (parseFloat(valor) * parseFloat(quantidade.value)) * (1 - parseFloat(valor1));
   if (isNaN(valorTotalCalculado)) {
   valorTotalCalculado = 0;
 }
   valorTotal.textContent = "Valor Total: R$" + valorTotalCalculado.toFixed(2);
+  valorTotalPromocao.value = valorTotalCalculado.toFixed(2);
+
+});
+
+quantidade.addEventListener("input", (event) => {
+var option = select.options[select.selectedIndex];
+ var option1 = tipo.options[tipo.selectedIndex];
+  var valor = option.value;
+  var valor1 = option1.value;
+  console.log(valor);
+  var valorTotalCalculado = (parseFloat(valor) * parseFloat(quantidade.value)) * (1 - parseFloat(valor1));
+  if (isNaN(valorTotalCalculado)) {
+  valorTotalCalculado = 0;
+}
+  valorTotal.textContent = "Valor Total: R$" + valorTotalCalculado.toFixed(2);
+  valorTotalPromocao.value = valorTotalCalculado.toFixed(2);
+
+});
+
+tipo.addEventListener("change", (event) => {
+var option = select.options[select.selectedIndex];
+ var option1 = tipo.options[tipo.selectedIndex];
+  var valor = option.value;
+  var valor1 = option1.value;
+  console.log(valor);
+  var valorTotalCalculado = (parseFloat(valor) * parseFloat(quantidade.value)) * (1 - parseFloat(valor1));
+  if (isNaN(valorTotalCalculado)) {
+  valorTotalCalculado = 0;
+}
+  valorTotal.textContent = "Valor Total: R$" + valorTotalCalculado.toFixed(2);
+  valorTotalPromocao.value = valorTotalCalculado.toFixed(2);
 
 });
 </script>

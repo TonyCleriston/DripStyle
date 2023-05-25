@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Loja de Roupa</title>
 </head>
+
     <body>
         {% include 'navbar.html' %}
         <div class="container">
@@ -19,11 +20,92 @@
                 {% endif %}
             {% endwith %}
         </div>
+     {% if current_user %}
+  {% if current_user.is_authenticated %}
+         <div class="sidebar">
+             <div class="sidebar-header">
+    <div class="sidebar-toggle" style="display:block;" onclick="toggleSidebar()">
+       <div class="sidebar-logo" style="margin-top:0px;">
+        <img src="{{ url_for('static', filename='Logo.png') }}" style="weight:60px;height:60px;">
+        <a style="margin-left:55px; font-size:30px; margin-top:15px;" class="sidebar-word">Menu</a>
+      </div>
+          <a href="{{ url_for('cadastro') }}" style="width:304px;">
+     <div class="sidebar-logo {% if current_page == 'pagina1' %}active{% endif %}" data-page="pagina1" style="margin-top:0px;">
+
+    <img src="{{ url_for('static', filename='adicionar-usuario.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
+    <span class="sidebar-word">Cadastro de Usuário</span>
+
+        </div>
+                </a>
+   <a href="{{ url_for('roupas') }}" style="width:304px;" >
+         <div class="sidebar-logo {% if current_page == 'pagina2' %}active{% endif %}" data-page="pagina2">
+
+        <img src="{{ url_for('static', filename='roupas-remove.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
+        <span class="sidebar-word">Roupas</span>
+        </div>
+        </a>
+ <a href="{{ url_for('vendas') }}" style="width:304px;">
+         <div class="sidebar-logo {% if current_page == 'pagina3' %}active{% endif %}" data-page="pagina3">
+
+        <img src="{{ url_for('static', filename='carrinho.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
+        <span class="sidebar-word">Vendas</span>
+        </div>
+        </a>
+  <a href="{{ url_for('cadastro') }}" style="width:304px;">
+       <div class="sidebar-logo {% if current_page == 'pagina4' %}active{% endif %}" data-page="pagina4">
+
+        <img src="{{ url_for('static', filename='historico.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
+        <span class="sidebar-word">Histórico de Vendas</span>
+        </div>
+        </a>
+ <a href="{{ url_for('cadastro') }}" style="width:304px;">
+        <div class="sidebar-logo {% if current_page == 'pagina5' %}active{% endif %}" data-page="pagina5">
+
+        <img src="{{ url_for('static', filename='remover-usuario.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
+        <span class="sidebar-word">Remover Usuários</span>
+         </div>
+        </a>
+    </div>
+                 </div>
+  </div>
+         {% endif %}
+{% endif %}
+
         {% block body %}
 
         {% endblock %}
 
         <script>
+
+
+
+        // Selecione todos os elementos .sidebar-logo
+var sidebarLogos = document.querySelectorAll('.sidebar-logo');
+
+// Itere sobre os elementos .sidebar-logo
+for (var i = 0; i < sidebarLogos.length; i++) {
+  var sidebarLogo = sidebarLogos[i];
+
+  // Verifique se a classe .active deve ser adicionada ou removida
+  if (sidebarLogo.dataset.page === currentPage) {
+    sidebarLogo.classList.add('active');
+  } else {
+    sidebarLogo.classList.remove('active');
+  }
+}
+
+    function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+
+  sidebar.addEventListener('mouseenter', () => {
+    sidebar.classList.add('active');
+  });
+
+  sidebar.addEventListener('mouseleave', () => {
+    sidebar.classList.remove('active');
+  });
+}
+toggleSidebar();
         function toggleForm() {
           var form = document.getElementById("add-roupa-form");
           var btn = document.getElementById("add-roupa-btn");
@@ -113,4 +195,5 @@ document.addEventListener('click', function(event) {
 
 </script>
     </body>
+{% include 'footer.html' %}
 </html>
