@@ -8,6 +8,10 @@ class FormLogin(FlaskForm):
     senha = PasswordField('Senha', validators=[DataRequired(), length(7,17)])
     submit_entrar = SubmitField('Entrar')
 
+class FormRemUsu(FlaskForm):
+    nome_usuario_del = StringField('Nome do Usuário', validators=[DataRequired(), length(7,30)])
+    submit_del_usuario = SubmitField('Remover')
+
 
 class FormCadastroUsuario(FlaskForm):
     usuario = StringField('Usuário', validators=[DataRequired(), length(7,30)]) #Mínimo de caracteres

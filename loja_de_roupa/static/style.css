@@ -84,6 +84,9 @@ all: unset;
     margin-top: 20px;
     width: 100%;
   }
+  input[type="submit"].submit-editar-roupa {
+  background-color:#424beb;
+   }
   input[type="submit"]:hover {
     background-color: #555555;
   }
@@ -241,7 +244,7 @@ all: unset;
   table {
     border-collapse: collapse;
     width: 100%;
-    max-width: 800px;
+    max-width: 1400px;
     margin: 0 auto;
   }
   
@@ -406,6 +409,129 @@ width:304px;
 .sidebar-logo.active {
   background-color: rgb(82 102 223 / 80%);
 }
+.excluir-button {
+            background-color: red;
+            color: white;
+            border: none;
+            font-weight:bold;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .editar-button {
+            background-color: #4646e9;
+            color: white;
+            border: none;
+            font-weight:bold;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+        }
+.popup-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
+    .popup {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .popup-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+    .popup-buttons button {
+cursor: pointer;
+    }
+     .popup-buttons .confirm-button {
+        background-color: red;
+        color: white;
+        font-size: 16px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+    }
+
+    .popup-buttons .cancel-button {
+        background-color: green;
+        font-size: 16px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        color: white;
+    }
+
+.user-icon {
+  position: relative;
+  display: inline-block;
+}
+#form-sair{
+padding:20px;
+}
+.form-container {
+  position: absolute;
+  top: 5%;
+  left: 68%;
+  display: none;
+
+}
+.form-row {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: baseline;
+  height:30px;
+}
+.form-row label {
+  display: inline-block;
+  width: 80px; /* Defina a largura desejada para o label */
+  color:black;
+  font-size:1.3em;
+  margin-top:0px;
+
+}
+
+.search-bar{
+width:386px;
+height:40px;
+padding: 8px;
+}
+.form-row input {
+all:unset;
+  display: inline-block;
+  margin-left:10px;
+  color:black;
+  border:none;
+  font-size:1.3em;
+
+}
+
+#sair {
+  border: none;
+  background: none;
+  padding: 10px 10px;
+  border-radius: 20px;
+  color: #333;
+  width:370px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#sair:hover {
+  background-color: #555;
+  color: #fff;
+}
 
 

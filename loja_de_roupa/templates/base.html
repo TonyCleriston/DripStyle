@@ -58,7 +58,8 @@
         <span class="sidebar-word">Histórico de Vendas</span>
         </div>
         </a>
- <a href="{{ url_for('cadastro') }}" style="width:304px;">
+        <hr size="1">
+ <a onclick="return checkAccess();" href="{% if current_user.id == '001' and current_user.usuario == 'ADMINISTRADOR' %}{{ url_for('RemoverUsuario') }}{% else %}javascript:void(0);{% endif %}" style="width:304px;">
         <div class="sidebar-logo {% if current_page == 'pagina5' %}active{% endif %}" data-page="pagina5">
 
         <img src="{{ url_for('static', filename='remover-usuario.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
@@ -74,7 +75,26 @@
         {% block body %}
 
         {% endblock %}
-
+        <script>
+function checkAccess() {
+  if ("{{ current_user.id }}" !== "001" || "{{ current_user.usuario }}" !== "ADMINISTRADOR") {
+    alert("Acesso negado!");
+    return false; // Impede o redirecionamento para /RemoverUsuario
+  }
+  return true; // Permite o redirecionamento para /RemoverUsuario
+}
+</script>
+  <script>
+function FormLogin() {
+          var form = document.getElementById("form-container");
+          var btn = document.getElementById("btn-logout");
+         if (form.style.display === "none" || form.style.display === "") {
+    form.style.display = "flex";
+  } else {
+    form.style.display = "none";
+  }
+}
+  </script>
         <script>
 
 
@@ -170,7 +190,14 @@ function toggleModal() {
   addRoupaModal.style.display = (addRoupaModal.style.display == "none") ? "flex" : "none";
   addRoupaModal.style.display = "flex";
 }
-addRoupaBtn.addEventListener("click", toggleModal);
+addRoupaBtn.addEventListener("click", function() {
+  toggleModal();
+
+ submitBtn.classList.remove('submit-editar-roupa');
+ submitBtn.setAttribute('name', 'submit_adc_roupa');
+  submitBtn.setAttribute('value', 'Adicionar');
+
+});
 document.addEventListener('click', function(event) {
   var modal = document.getElementById('add-roupa-modal');
   if (event.target == modal) {

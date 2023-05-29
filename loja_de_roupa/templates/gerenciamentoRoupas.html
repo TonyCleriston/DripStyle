@@ -7,8 +7,8 @@
   <img src="{{ url_for('static', filename='wardrobe.png') }}" style="width:50px;height:50px; margin-left:10px;" alt="Texto alternativo"></button>
   <div id="add-roupa-modal">
     <div class="modal">
-            
-              <form method="POST" style="margin-top: 0px;width: 360px; ">
+
+              <form id="roupa-form" method="POST" style="margin-top: 0px;width: 360px; ">
                 {{ gerenciamento.nome_roupa_adc.label(for="username") }}
                 {{ gerenciamento.nome_roupa_adc(id="username") }}
 
@@ -32,7 +32,7 @@
         </div>
   </div>
 </div>
-<div id="del-usuario-modal">
+<!--<div id="del-usuario-modal">
     <div class="modal">
               <form method="POST" style="margin-top: 0px;width: 360px; ">
                 {{ gerenciamento.nome_usuario_del.label(for="username2") }}
@@ -41,10 +41,10 @@
               </form>
 
         </div>
-    </div>
-<div style="display: flex;flex-direction: wrap;">
-        <div style="display: flex;flex-direction: column;align-content: center;align-items: center;width: 50vw; margin: 0px;" >
-            <button id="rem-roupa-btn" onclick="toggleFormRem()">Remover Roupa</button>
+    </div>-->
+<div style="display: flex;flex-direction: wrap;align-content: center;justify-content: center;">
+       <!--<div style="display: flex;flex-direction: column;align-content: center;align-items: center;width: 50vw; margin: 0px;" >
+             <button id="rem-roupa-btn" onclick="toggleFormRem()">Remover Roupa</button>
             <div id="rem-roupa-form" style="display: none;">
               <form method="POST" style="margin-top: 0px;width: 360px; ">
                 {{ gerenciamento.nome_roupa_del.label(for="username1") }}
@@ -52,7 +52,7 @@
                  {{ gerenciamento.submit_del_roupa() }}
               </form>
             </div>
-        </div>
+        </div>-->
 
         <div style="display: flex;flex-direction: column;align-content: center;align-items: center;width: 50vw; margin: 0px;" >
           <button id="add-categoria-btn" onclick="toggleFormAddCat()">Gerenciar Categoria</button>
@@ -71,7 +71,7 @@
       </div>
 
 
-    <div style="display: flex;flex-direction: column;align-content: center;align-items: center;width: 50vw; margin: 0px;" >
+    <!--<div style="display: flex;flex-direction: column;align-content: center;align-items: center;width: 50vw; margin: 0px;" >
       <button id="add-estoque-btn" onclick="toggleFormAddEst()">Gerenciar Estoque</button>
       <div id="add-estoque-form" style="display: none;">
         <form method="POST" style="margin-top: 0px;width: 360px; ">
@@ -89,10 +89,14 @@
         {{ gerenciamento.submit_del_estoque() }}
         </form>
       </div>
-  </div>
+  </div>-->
 
     </div>
-        <table style="width: 100%; margin-top: 30px;">
+<div style="display:flex;flex-direction: column;align-items: center;">
+<div class="search-bar" style="margin-top:13px;margin-bottom:22px;">
+  <input style="padding:7px;" type="text" id="search-input" placeholder="Pesquisar roupa" oninput="filterTable()">
+</div>
+        <table style="width: 1000px; margin:0;" id="clothes-table">
             <thead>
               <tr>
                 <th>id</th>
@@ -101,6 +105,8 @@
                   <th>Valor</th>
                 <th>Estoque</th>
                 <th>Tamanho</th>
+                  <th></th>
+                  <th></th>
               </tr>
             </thead>
             <tbody>
@@ -112,12 +118,164 @@
                     <th>R$ {{ r.valor }}</th>
                     <th>{{ r.estoque }}</th>
                      <th>{{ r.tamanho }}</th>
+                    <th>
+                    <button id="editar-button" class="editar-button" data-id="{{ r.id }}" data-nome="{{ r.nome_roupa }}" data-valor="{{ r.valor }}" data-tamanho="{{ r.tamanho }}" data-categoria="{{ r.categoria }}" data-estoque="{{ r.estoque }}">EDITAR</button>
+                    </th>
+                    <th>
+                    <form style="all:unset;" action="/excluir/{{ r.id }}" method="POST">
+                        <button  class="excluir-button" type="submit" data-product-name="{{r.nome_roupa}}" data-product-id="{{ r.id }}">EXCLUIR</button>
+                    </form>
+                </th>
                 </tr>
                  {% endfor %}
             </tbody>
           </table>
-          </li>
-        </ul>
+    </div>
+
+<script>
+  function filterTable() {
+    var input = document.getElementById("search-input").value.toLowerCase();
+    var table = document.getElementById("clothes-table");
+    var rows = table.getElementsByTagName("tr");
+
+    for (var i = 1; i < rows.length; i++) {
+      var row = rows[i];
+      var name = row.cells[1].textContent.toLowerCase();
+
+      if (name.indexOf(input) > -1) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+    }
+  }
+</script>
+<script>
+var submitBtn = document.getElementById("submit_adc_roupa");
+ var editarBtn = document.querySelectorAll('.editar-button');
+var addRoupaModal = document.getElementById("add-roupa-modal");
+ const editarButtons = document.querySelectorAll('.editar-button');
+const roupasForm = document.getElementById('roupa-form');
+function toggleModalEdit() {
+  addRoupaModal.style.display = (addRoupaModal.style.display == "none") ? "flex" : "none";
+  addRoupaModal.style.display = "flex";
+}
+document.addEventListener('click', function(event) {
+  var modal = document.getElementById('add-roupa-modal');
+  if (submitBtn.classList.contains('submit-editar-roupa')) {
+    if (event.target == modal) {
+    modal.style.display = "none";
+    var inputs = document.querySelectorAll('#add-roupa-modal input');
+    inputs.forEach(function(input) {
+      input.value = '';
+    });
+    }
+
+    }
+});
+
+
+editarButtons.forEach(button => {
+    button.addEventListener('click', function() {
+    const id = this.dataset.id;
+      const nome = this.dataset.nome;
+      const valor = this.dataset.valor;
+      const tamanho = this.dataset.tamanho;
+      const categoria = this.dataset.categoria;
+      const estoque = this.dataset.estoque;
+
+      // Preencha o formulário com as informações da roupa
+      roupasForm.elements.nome_roupa_adc.value = nome;
+      roupasForm.elements.valor.value = valor;
+      roupasForm.elements.tamanho.value = tamanho;
+      roupasForm.elements.categoria.value = categoria;
+      roupasForm.elements.estoque.value = estoque;
+
+      toggleModalEdit();
+
+      submitBtn.classList.add('submit-editar-roupa');
+      submitBtn.setAttribute('name', 'editar_roupa');
+      submitBtn.setAttribute('value', 'Editar');
+
+
+submitBtn.addEventListener("click", function() {
+  var roupaId = id
+
+  if (submitBtn.classList.contains('submit-editar-roupa')) {
+    roupasForm.setAttribute('action', '/editar/' + roupaId);
+    roupasForm.setAttribute('method', 'POST');
+    roupasForm.submit();
+  }
+});
+    });
+  });
+</script>
+<script>
+   // Captura o clique no botão de exclusão
+const deleteButtons = document.querySelectorAll('.excluir-button');
+
+deleteButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        event.preventDefault();
+        const productName = this.dataset.productName;
+        const productId = this.dataset.productId;
+    const url = `/excluir/${productId}`;
+
+        // Cria o pop-up
+        const popupContainer = document.createElement('div');
+        popupContainer.classList.add('popup-container');
+
+        const popup = document.createElement('div');
+        popup.classList.add('popup');
+
+        const message = document.createElement('p');
+        message.textContent = 'Deseja realmente excluir ';
+
+        const productNameElement = document.createElement('span');
+        productNameElement.textContent = productName.charAt(0).toUpperCase() + productName.slice(1).toLowerCase();
+        productNameElement.style.fontWeight = 'bold';
+
+        message.appendChild(productNameElement);
+        message.appendChild(document.createTextNode('?'));
+
+        const buttonsContainer = document.createElement('div');
+        buttonsContainer.classList.add('popup-buttons');
+
+        const confirmButton = document.createElement('button');
+        confirmButton.textContent = 'Confirmar';
+        confirmButton.classList.add('confirm-button');
+
+        const cancelButton = document.createElement('button');
+        cancelButton.textContent = 'Cancelar';
+        cancelButton.classList.add('cancel-button');
+
+        // Manipula o clique no botão "Confirmar"
+        confirmButton.addEventListener('click', function() {
+            const form = button.closest('form');
+      form.action = url;
+      form.submit();
+        });
+
+        // Manipula o clique no botão "Cancelar"
+        cancelButton.addEventListener('click', function() {
+            // Remove o pop-up
+            document.body.removeChild(popupContainer);
+        });
+
+        // Monta a estrutura do pop-up
+        buttonsContainer.appendChild(confirmButton);
+        buttonsContainer.appendChild(cancelButton);
+
+        popup.appendChild(message);
+        popup.appendChild(buttonsContainer);
+
+        popupContainer.appendChild(popup);
+
+        // Adiciona o pop-up ao corpo do documento
+        document.body.appendChild(popupContainer);
+    });
+});
+</script>
 <script>
   var currentPage = 'pagina2';
 

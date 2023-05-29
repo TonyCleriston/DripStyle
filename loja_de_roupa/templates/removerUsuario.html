@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="" style="display:flex; width:100vw; height:100vh; padding:100px;align-items:flex-start; ">
+
+              <form method="POST" style="margin-top: 0px;width: 517px; height:250px; margin-top:6%; margin-right:82px;">
+                {{ form_rem_usu.nome_usuario_del.label(for="search-input") }}
+                {{ form_rem_usu.nome_usuario_del(id="search-input",placeholder="Pesquisar Usuário", oninput="filterTable()") }}<br><br>
+                {{ form_rem_usu.submit_del_usuario() }}
+              </form>
+
+        <table style="width: 100%; margin-top: 1px;" id="clothes-table"  >
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Usuário</th>
+              </tr>
+            </thead>
+            <tbody style="height: auto;">
+                {% for u in usuario %}
+                <tr >
+                    <th>{{ u.id }}</th>
+                    <th>{{ u.usuario }}</th>
+                </tr>
+                 {% endfor %}
+            </tbody>
+          </table>
+
+     </div>
+<script>
+  function filterTable() {
+    var input = document.getElementById("search-input").value.toLowerCase();
+    var table = document.getElementById("clothes-table");
+    var rows = table.getElementsByTagName("tr");
+
+    for (var i = 1; i < rows.length; i++) {
+      var row = rows[i];
+      var name = row.cells[1].textContent.toLowerCase();
+
+      if (name.indexOf(input) > -1) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+    }
+  }
+</script>
+{% endblock %}

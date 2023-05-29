@@ -2,9 +2,9 @@ from loja_de_roupa import database , login_manager
 from flask_login import UserMixin
 @login_manager.user_loader
 def load_usuario(id):
-    return Usuario.query.get(int(id))
+    return Usuario.query.get(id)
 class Usuario(database.Model, UserMixin):
-    id = database.Column(database.Integer, primary_key=True)
+    id = database.Column(database.String(3), nullable=False, primary_key=True)
     usuario = database.Column(database.String, nullable=False, unique=True)
     email = database.Column(database.String, nullable=False, unique=True)
     senha = database.Column(database.String, nullable=False)

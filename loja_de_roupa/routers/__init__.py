@@ -1,12 +1,74 @@
 from flask import render_template, url_for, redirect, flash, request
-from loja_de_roupa.forms import FormLogin, FormCadastroUsuario, FormGerenciamentoRoupas , VendaForm
+from loja_de_roupa.forms import FormLogin, FormCadastroUsuario, FormGerenciamentoRoupas , VendaForm,FormRemUsu
 from loja_de_roupa import app, database
 from loja_de_roupa.models import Usuario, Roupas, Categoria, Promocao, Vendas
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 from flask_login import login_required , login_user , logout_user
 
+@app.route('/excluir/<int:r_id>', methods=['GET','POST'])
+def excluir(r_id):
+    roupa = Roupas.query.get(r_id)
+    flash(f'{roupa.nome_roupa.capitalize()} foi excluida com sucesso', 'alert-success')
+    database.session.delete(roupa)
+    database.session.commit()
 
+    return redirect(url_for('roupas'))
+
+def generate_codigo():
+    last_id = Usuario.query.order_by(Usuario.id.desc()).first()
+    if last_id:
+        new_id = str(int(last_id.id) + 1).zfill(3)
+    else:
+        new_id = '001'
+    return new_id
+
+@app.route('/editar/<int:r_id>', methods=['GET', 'POST'])
+def editar(r_id):
+    gerenciamento = FormGerenciamentoRoupas()
+    try:
+        print(gerenciamento.valor.data)
+        print(gerenciamento.valor)
+        valor_validado = gerenciamento.valor.data.replace(",", ".")
+        nome_roupa_adc_validado = gerenciamento.nome_roupa_adc.data.upper()
+        if int(gerenciamento.estoque.data) < 0:
+            flash(f'Escreva um estoque positivo', 'alert-danger')
+            return redirect(url_for('roupas'))
+        if int(gerenciamento.estoque.data) == 0:
+            flash(f'O Estoque não pode ser zero', 'alert-danger')
+            return redirect(url_for('roupas'))
+        if float(valor_validado) < 0:
+            flash(f'Escreva um valor positivo', 'alert-danger')
+            return redirect(url_for('roupas'))
+        if float(valor_validado) == 0:
+            flash(f'O Valor não pode ser zero', 'alert-danger')
+            return redirect(url_for('roupas'))
+        x = 0
+        for char in gerenciamento.tamanho.data:
+            if char == " ":
+                x += 1
+            if x == 1:
+                flash(f'Não é Permitido Espaços no campo Tamanho', 'alert-danger')
+                return redirect(url_for('roupas'))
+
+        categoria_validado = gerenciamento.categoria.data.upper()
+        tamanho_validado = gerenciamento.tamanho.data.upper()
+        roupa = Roupas.query.get(r_id)
+
+        if roupa:
+            roupa.nome_roupa = nome_roupa_adc_validado
+            roupa.categoria = categoria_validado
+            roupa.tamanho = tamanho_validado
+            roupa.estoque = gerenciamento.estoque.data
+            roupa.valor = valor_validado
+
+            database.session.commit()
+        flash(f'{gerenciamento.nome_roupa_adc.data} editado com sucesso', 'alert-success')
+        return redirect(url_for('roupas'))
+    except Exception as e:
+        flash(f'Ocorreu um erro ao editar a roupa: {str(e)}', 'alert-danger')
+        return redirect(url_for('roupas'))
+    return redirect(url_for('roupas'))
 @app.route('/logout')
 def logout():
     logout_user()
@@ -227,12 +289,11 @@ def cadastro():
                     flash(f'Digite um domínio válido Ex: gmail,hotmail,outlook', 'alert-danger')
                     return redirect(url_for('cadastro'))
 
-
-
+                codigo = generate_codigo()
                 usuario_cadastro_validado = form_cadastro_usuario.usuario.data.upper()
                 senha = form_cadastro_usuario.senha.data
                 senha_criptografada = generate_password_hash(senha)
-                usuario = Usuario(usuario=usuario_cadastro_validado, email=form_cadastro_usuario.email.data, senha=senha_criptografada)
+                usuario = Usuario(id=codigo, usuario=usuario_cadastro_validado, email=form_cadastro_usuario.email.data, senha=senha_criptografada)
                 database.session.add(usuario)
                 database.session.commit()
                 flash(f'{form_cadastro_usuario.usuario.data.lower()} cadastrado com sucesso', 'alert-success')
@@ -241,6 +302,29 @@ def cadastro():
                 flash(f'Erro ao cadastrar usuário, usuário ou email já existentes!', 'alert-danger')
                 return redirect(url_for('cadastro'))
     return render_template('cadastro.html', form_cadastro_usuario=form_cadastro_usuario)
+@app.route("/RemoverUsuario", methods=['GET', 'POST'])
+@login_required
+def RemoverUsuario():
+    table = Usuario.query.all()
+    form_rem_usu = FormRemUsu()
+    usuario = [{'id': u.id, 'usuario': u.usuario } for u in table]
+    if form_rem_usu.submit_del_usuario.name in request.form:
+        if not form_rem_usu.validate_on_submit():
+            usuario_deletado_validado = form_rem_usu.nome_usuario_del.data.upper()
+            user = Usuario.query.filter_by(usuario=usuario_deletado_validado).all()
+            try:
+                if not user:
+                    flash(f'Erro ao deletar Usuário', 'alert-danger')
+                    return redirect(url_for('RemoverUsuario'))
+                for u in user:
+                    database.session.delete(u)
+                    database.session.commit()
+                    flash(f'{form_rem_usu.nome_usuario_del.data} apagado(a) com sucesso', 'alert-success')
+                return redirect(url_for('RemoverUsuario'))
+            except:
+                flash(f'Erro ao deletar Usuário', 'alert-danger')
+                return redirect(url_for('RemoverUsuario'))
+    return render_template('removerUsuario.html', form_rem_usu=form_rem_usu, usuario=usuario)
 
 @app.route("/vendas", methods=['GET', 'POST'])
 @login_required
