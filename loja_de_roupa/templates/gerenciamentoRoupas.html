@@ -8,25 +8,37 @@
   <div id="add-roupa-modal">
     <div class="modal">
 
-              <form id="roupa-form" method="POST" style="margin-top: 0px;width: 360px; ">
-                {{ gerenciamento.nome_roupa_adc.label(for="username") }}
-                {{ gerenciamento.nome_roupa_adc(id="username") }}
+              <form id="roupa-form" class="formRoupa" method="POST" style="margin-top: 20px;width: 360px; ">
+                {{ gerenciamento.nome_roupa_adc.label(for="username", class="labelRoupa") }}
+                {{ gerenciamento.nome_roupa_adc(id="username", class="inputRoupa") }}
 
-                 {{ gerenciamento.valor.label(for="valor") }}
-                 {{ gerenciamento.valor(id="valor") }}
+                 {{ gerenciamento.valor.label(for="valor", class="labelRoupa") }}
+                 {{ gerenciamento.valor(id="valor", class="inputRoupa") }}
 
-                 {{ gerenciamento.tamanho.label(for="tamanho") }}
-                 {{ gerenciamento.tamanho(id="tamanho") }}
+                 {{ gerenciamento.tamanho.label(for="tamanho", class="labelRoupa") }}
+                 {{ gerenciamento.tamanho(id="tamanho", class="inputRoupa") }}
 
-                {{ gerenciamento.categoria.label(for="categoria") }}
+                {{ gerenciamento.categoria.label(for="categoria",class="labelRoupa") }}
                 <select name="categoria">
                     {% for c in categoria %}
                 <option value="{{ c.categoria }}">{{ c.categoria.lower().capitalize() }}</option>
                 {% endfor %}
-                </select><br><br>
-                {{ gerenciamento.estoque.label(for="estoque") }}
-                 {{ gerenciamento.estoque(id="estoque") }}
-                {{ gerenciamento.submit_adc_roupa() }}
+                </select>
+                  <div style="display:flex;">
+                      <div style="display:block; margin-right: 5px;">
+                {{ gerenciamento.estoque.label(for="estoque",class="labelRoupa") }}
+                 {{ gerenciamento.estoque(id="estoque", class="inputRoupa") }}
+
+                          </div>
+                      <div style="display:block;margin-left: 5px;">
+                {{ gerenciamento.min_estoque.label(for="min_estoque",class="labelRoupa") }}
+                 {{ gerenciamento.min_estoque(id="min_estoque" ,class="inputRoupa") }}
+
+                          </div>
+                      </div>
+                   {{ gerenciamento.descricao.label(for="descricao",class="labelRoupa") }}
+                 {{ gerenciamento.descricao(id="descricao") }}
+                  {{ gerenciamento.submit_adc_roupa() }}
               </form>
             </div>
         </div>
@@ -116,10 +128,12 @@
                     <th>{{ r.nome_roupa }}</th>
                      <th>{{ r.categoria }}</th>
                     <th>R$ {{ r.valor }}</th>
-                    <th>{{ r.estoque }}</th>
+                    <th style=" font-size:20px;font-family:monospace;background-color: {% if r.estoque < r.min_estoque/2 %}#f90000b5{% elif r.estoque < r.min_estoque %}yellow{% else %}#1cf11c{% endif %}">
+                            {{ r.estoque }}
+                        </th>
                      <th>{{ r.tamanho }}</th>
                     <th>
-                    <button id="editar-button" class="editar-button" data-id="{{ r.id }}" data-nome="{{ r.nome_roupa }}" data-valor="{{ r.valor }}" data-tamanho="{{ r.tamanho }}" data-categoria="{{ r.categoria }}" data-estoque="{{ r.estoque }}">EDITAR</button>
+                    <button id="editar-button" class="editar-button" data-id="{{ r.id }}" data-nome="{{ r.nome_roupa }}" data-valor="{{ r.valor }}" data-tamanho="{{ r.tamanho }}" data-categoria="{{ r.categoria }}" data-estoque="{{ r.estoque }}" data-descricao="{{ r.descricao }}" data-min="{{ r.min_estoque }}">EDITAR</button>
                     </th>
                     <th>
                     <form style="all:unset;" action="/excluir/{{ r.id }}" method="POST">
@@ -183,6 +197,8 @@ editarButtons.forEach(button => {
       const tamanho = this.dataset.tamanho;
       const categoria = this.dataset.categoria;
       const estoque = this.dataset.estoque;
+      const min = this.dataset.min;
+      const descricao = this.dataset.descricao;
 
       // Preencha o formulário com as informações da roupa
       roupasForm.elements.nome_roupa_adc.value = nome;
@@ -190,6 +206,8 @@ editarButtons.forEach(button => {
       roupasForm.elements.tamanho.value = tamanho;
       roupasForm.elements.categoria.value = categoria;
       roupasForm.elements.estoque.value = estoque;
+      roupasForm.elements.min_estoque.value = min;
+      roupasForm.elements.descricao.value = descricao;
 
       toggleModalEdit();
 

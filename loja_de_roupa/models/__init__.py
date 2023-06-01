@@ -1,5 +1,7 @@
 from loja_de_roupa import database , login_manager
 from flask_login import UserMixin
+import datetime
+import pytz
 @login_manager.user_loader
 def load_usuario(id):
     return Usuario.query.get(id)
@@ -15,11 +17,18 @@ class Roupas(database.Model):
     categoria = database.Column(database.String, nullable=False)
     tamanho = database.Column(database.String, nullable=False)
     estoque = database.Column(database.Integer, nullable=False)
+    min_estoque = database.Column(database.Integer)
     valor = database.Column(database.Float, nullable=False)
+    descricao = database.Column(database.String)
 
 class Categoria(database.Model):
     id_categoria = database.Column(database.Integer, primary_key=True)
     nome_categoria = database.Column(database.String, nullable=False, unique=True)
+
+class Cliente(database.Model):
+    id_cliente = database.Column(database.Integer, primary_key=True)
+    nome_cliente = database.Column(database.String, nullable=False)
+    cpf = database.Column(database.String, nullable=False, unique=True)
 
 class Promocao(database.Model):
     id_promo = database.Column(database.Integer, primary_key=True)
@@ -28,9 +37,18 @@ class Promocao(database.Model):
 
 class Vendas(database.Model):
     id_venda = database.Column(database.Integer, primary_key=True)
+    codigo_pedido = database.Column(database.Integer)
     roupas_fk = database.Column(database.String, nullable=False)
+    valor_unitario = database.Column(database.Float)
+    valor_total = database.Column(database.Float)
+    qtd = database.Column(database.Integer)
     nome_cliente = database.Column(database.String, nullable=False)
-    endereco = database.Column(database.String, nullable=False)
-    valor_venda = database.Column(database.Float, nullable=False)
+    total_da_venda = database.Column(database.Float, nullable=False)
+    tipo_pagamento_fk = database.Column(database.String)
+    vendedor = database.Column(database.String)
+    fuso_horario = pytz.timezone('America/Sao_Paulo')
+    data_hora_atual = datetime.datetime.now(fuso_horario)
+    data_da_venda = database.Column(database.DateTime, default=data_hora_atual)
+
 
 

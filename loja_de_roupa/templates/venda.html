@@ -1,40 +1,89 @@
 {% extends 'base.html' %}
 
 {% block body %}
-        <form method="POST">
-          <h2>Vendas</h2>
 
-          {{ venda_form.roupa_venda.label() }}
-            <select id="roupa_nome" name="roupa_venda">
+<div style="display:flex;justify-content:center;width:100vw;height:80vh; align-items: flex-start ;">
+
+    <div style="display:flex;flex-direction:column;width:70vw; margin-left:3%;margin-bottom:7%;align-items: center;padding:30px;">
+        <form style="padding:20px;max-height:350px; width:100%;margin:0;max-width:unset;display:flex; flex-wrap: wrap;  align-items: center;    justify-content: center;">
+        <div style="border-right: 3px solid black;display:flex; flex-wrap: wrap;padding-right: 30px;">
+          {{ venda_form.roupa_venda.label(style="font-weight:bold;width:6vw;") }}
+            <select id="roupa_nome" name="roupa_venda" style="width:18vw;margin-left:10px;">
                 <option value="" disabled selected>Selecione a roupa:</option>
                 {% for r in roupas %}
                 <option value="{{ r.valor }}">{{ r.nome_roupa.lower().capitalize() }}</option>
                 {% endfor %}
                 </select>
+ </div>
              {{ venda_form.roupa_vendida(value="",style="display:none;") }}
+<div style="border-right: 3px solid black;display:flex; flex-wrap: wrap; padding-right: 30px;">
+            {{ venda_form.qtd_estoque_venda.label(for="username9",style="width:7vw;margin-left:30px;font-weight:bold;") }}
+            {{ venda_form.qtd_estoque_venda(id="username9",style="width:6vw;margin-left:10px;") }}
+    </div>
+            <button type="button" onclick="Carrinho()" style="margin:0;text-align:center;padding:0;margin-left:30px;background-color:#5555ff; width:10vw;height:40px;cursor:pointer;">Adicionar ao Carrinho</button>
 
-            {{ venda_form.qtd_estoque_venda.label(for="username9") }}
-            {{ venda_form.qtd_estoque_venda(id="username9") }}
+            </form>
 
-            {{ venda_form.tipo_pagamento.label() }}
-            <select id="tipo_pagamento" name="tipo_pagamento">
+        <table id="carrinho-table" style="margin-top:20px; width:100%;">
+    <thead>
+        <tr>
+            <th>Nome da Roupa</th>
+            <th>Em Estoque</th>
+            <th>Quantidade</th>
+            <th>Custo</th>
+            <th>Total</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in carrinho %}
+        <tr>
+            <td>{{ item.nome }}</td>
+            <td>{{ item.quantidade }}</td>
+            <td>{{ item.valor_total }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    function Carrinho() {
+        event.preventDefault();
+
+        var nomeRoupa = document.getElementById("roupa_nome").options[document.getElementById("roupa_nome").selectedIndex].text;
+        var valorRoupa = document.getElementById("roupa_nome").value;
+        var quantidade = document.getElementById("username9").value;
+        var valorTotal = valorRoupa * quantidade;
+
+        var newRow = document.createElement("tr");
+        newRow.innerHTML = "<td>" + nomeRoupa + "</td><td>" + quantidade + "</td><td>" + valorTotal + "</td>";
+
+        document.getElementById("carrinho-table").getElementsByTagName("tbody")[0].appendChild(newRow);
+    });
+</script>
+</div>
+     <div style="display:flex; width:360px;height:95%;margin-top:4%;">
+         <form method="POST" style="max-height:460px; width:360px;">
+            {{ venda_form.cpf.label(for="username13") }}
+            {{ venda_form.cpf(id="username13") }}
+
+            {{ venda_form.nome_cliente.label(for="username10") }}
+            {{ venda_form.nome_cliente(id="username10") }}
+         {{ venda_form.tipo_pagamento.label() }}
+           <select id="tipo_pagamento" name="tipo_pagamento">
                 <option value="" disabled selected>Selecione a forma de pagamento:</option>
                 {% for t in tipo %}
                 <option value="{{ t.porcentagem }}">{{ t.tipo_pagamento.lower().capitalize() }}</option>
                 {% endfor %}
                 </select>
 
-            {{ venda_form.nome_cliente.label(for="username10") }}
-            {{ venda_form.nome_cliente(id="username10") }}
-
-            {{ venda_form.endereco.label(for="username11") }}
-            {{ venda_form.endereco(id="username11") }}
-
             {{ venda_form.valor_total.label(id="cavalo") }}
              {{ venda_form.valor_total(value="",style="display:none;",id="cavalo2") }}
 
             {{ venda_form.submit_venda() }}
-        </form>
+         </form>
+</div>
+</div>
 <script>
   var currentPage = 'pagina3';
 
@@ -86,7 +135,7 @@ console.log(opcoes[i].textContent);
         break;
 }
 }
-  valorTotal.textContent = "Valor Total: R$" + valorTotalCalculado.toFixed(2);
+  valorTotal.textContent = "Valor Total da Venda: R$" + valorTotalCalculado.toFixed(2);
   valorTotalPromocao.value = valorTotalCalculado.toFixed(2);
 });
 
@@ -100,7 +149,7 @@ quantidade.addEventListener("input", (event) => {
   if (isNaN(valorTotalCalculado)) {
   valorTotalCalculado = 0;
 }
-  valorTotal.textContent = "Valor Total: R$" + valorTotalCalculado.toFixed(2);
+  valorTotal.textContent = "Valor Total da Venda: R$" + valorTotalCalculado.toFixed(2);
   valorTotalPromocao.value = valorTotalCalculado.toFixed(2);
 
 });
@@ -115,7 +164,7 @@ var option = select.options[select.selectedIndex];
   if (isNaN(valorTotalCalculado)) {
   valorTotalCalculado = 0;
 }
-  valorTotal.textContent = "Valor Total: R$" + valorTotalCalculado.toFixed(2);
+  valorTotal.textContent = "Valor Total da Venda: R$" + valorTotalCalculado.toFixed(2);
   valorTotalPromocao.value = valorTotalCalculado.toFixed(2);
 
 });
@@ -130,7 +179,7 @@ var option = select.options[select.selectedIndex];
   if (isNaN(valorTotalCalculado)) {
   valorTotalCalculado = 0;
 }
-  valorTotal.textContent = "Valor Total: R$" + valorTotalCalculado.toFixed(2);
+  valorTotal.textContent = "Valor Total da Venda: R$" + valorTotalCalculado.toFixed(2);
   valorTotalPromocao.value = valorTotalCalculado.toFixed(2);
 
 });

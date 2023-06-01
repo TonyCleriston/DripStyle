@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="" style="display:flex;width: calc(100% - 70px);box-sizing: border-box;overflow-x: auto; height:70vh; margin-left:70px;margin-top:50px;align-items:flex-start; ">
+    <div class="table-wrapper" style=" width: fit-content;
+  margin-right: auto;
+  margin-left: auto;">
+<table style="width:82vw; margin:0; width: 100%;" id="clothes-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome da Roupa</th>
+                <th>Nome do Cliente</th>
+                <th>Valor da Venda</th>
+                <th>Vendedor</th>
+                  <th>Data da Venda</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for r in vendas %}
+                <tr>
+                    <th>{{ r.id_venda }}</th>
+                    <th>{{ r.roupas_fk }}</th>
+                     <th>{{ r.nome_cliente }}</th>
+                    <th>{{ r.valor_venda }}</th>
+                     <th>{{ r.vendedor }}</th>
+                    <th>{{ r.data_da_venda.strftime('%d-%m-%Y / %H:%M') }}</th>
+
+                 {% endfor %}
+            </tbody>
+          </table>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

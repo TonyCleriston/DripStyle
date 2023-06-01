@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, length, Email,equal_to
+from wtforms.widgets import TextArea
 
 
 class FormLogin(FlaskForm):
@@ -25,8 +26,10 @@ class FormGerenciamentoRoupas(FlaskForm):
     valor = StringField('Valor', validators=[DataRequired(), length(1,10)])
     categoria = StringField('Categoria', validators=[DataRequired(), length(1,30)])
     estoque = StringField('Estoque', validators=[DataRequired(), length(1,5)])
+    min_estoque = StringField('Estoque Desejado', validators=[DataRequired(), length(1, 5)])
     tamanho = StringField('Tamanho', validators=[DataRequired(), length(1,10)])
     nome_roupa_del = StringField('Nome da Roupa', validators=[DataRequired(), length(1,70)])
+    descricao = StringField('Descrição',widget=TextArea(), validators=[DataRequired(), length(1, 300)])
     nome_usuario_del = StringField('Nome da Usuário', validators=[DataRequired(), length(7,30)])
     nome_categoria_add = StringField('Adicionar Categoria', validators=[length(1, 30)])
     nome_categoria_del = StringField('Remover Categoria', validators=[length(1, 30)])
@@ -43,12 +46,12 @@ class FormGerenciamentoRoupas(FlaskForm):
     submit_del_usuario = SubmitField('Remover')
 
 class VendaForm(FlaskForm):
-    roupa_venda = StringField('Produtos')
+    roupa_venda = StringField('Produtos: ')
     roupa_vendida = StringField()
-    qtd_estoque_venda = StringField('Quantidade do Produto', validators=[DataRequired(), length(1,1000)])
-    valor_total = StringField('Valor Total:', validators=[length(1,1000)])
+    qtd_estoque_venda = StringField('Quantidade: ', validators=[DataRequired(), length(1,1000)])
+    valor_total = StringField('Valor Total da Venda:', validators=[length(1,1000)])
     valor_unitario = StringField()
     nome_cliente = StringField('Nome do Cliente', validators=[length(1,70)])
-    endereco = StringField('Endereço', validators=[length(1,70)])
+    cpf = StringField('CPF', validators=[length(1,11)])
     tipo_pagamento = StringField('Forma de Pagamento')
     submit_venda = SubmitField('Vender')

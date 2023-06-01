@@ -4,7 +4,7 @@ from loja_de_roupa import app, database
 from loja_de_roupa.models import Usuario, Roupas, Categoria, Promocao, Vendas
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
-from flask_login import login_required , login_user , logout_user
+from flask_login import login_required , login_user , logout_user, current_user
 
 @app.route('/excluir/<int:r_id>', methods=['GET','POST'])
 def excluir(r_id):
@@ -27,10 +27,16 @@ def generate_codigo():
 def editar(r_id):
     gerenciamento = FormGerenciamentoRoupas()
     try:
-        print(gerenciamento.valor.data)
-        print(gerenciamento.valor)
+
         valor_validado = gerenciamento.valor.data.replace(",", ".")
         nome_roupa_adc_validado = gerenciamento.nome_roupa_adc.data.upper()
+        min_estoque_validado = gerenciamento.min_estoque.data
+        if int(min_estoque_validado) < 0:
+            flash(f'Escreva um estoque positivo', 'alert-danger')
+            return redirect(url_for('roupas'))
+        if int(min_estoque_validado) == 0:
+            flash(f'O Estoque não pode ser zero', 'alert-danger')
+            return redirect(url_for('roupas'))
         if int(gerenciamento.estoque.data) < 0:
             flash(f'Escreva um estoque positivo', 'alert-danger')
             return redirect(url_for('roupas'))
@@ -61,6 +67,8 @@ def editar(r_id):
             roupa.tamanho = tamanho_validado
             roupa.estoque = gerenciamento.estoque.data
             roupa.valor = valor_validado
+            roupa.min_estoque = min_estoque_validado
+            roupa.descricao = gerenciamento.descricao.data
 
             database.session.commit()
         flash(f'{gerenciamento.nome_roupa_adc.data} editado com sucesso', 'alert-success')
@@ -97,7 +105,7 @@ def login():
 def roupas():
     gerenciamento = FormGerenciamentoRoupas()
     table = Roupas.query.all()
-    roupas = [{'id': r.id_roupas, 'nome_roupa': r.nome_roupa, 'categoria':r.categoria, 'tamanho': r.tamanho,'estoque': r.estoque,'valor': r.valor} for r in table]
+    roupas = [{'id': r.id_roupas, 'nome_roupa': r.nome_roupa, 'categoria':r.categoria, 'tamanho': r.tamanho,'estoque': r.estoque,'valor': r.valor,'min_estoque': r.min_estoque,'descricao': r.descricao} for r in table]
     categorias = Categoria.query.all()
     categoria = [{'id': c.id_categoria,'categoria': c.nome_categoria} for c in categorias]
     if request.method == 'POST':
@@ -106,6 +114,13 @@ def roupas():
                 try:
                     valor_validado = gerenciamento.valor.data.replace(",", ".")
                     nome_roupa_adc_validado = gerenciamento.nome_roupa_adc.data.upper()
+                    min_estoque_validado = gerenciamento.min_estoque.data
+                    if int(min_estoque_validado) < 0:
+                        flash(f'Escreva um estoque positivo', 'alert-danger')
+                        return redirect(url_for('roupas'))
+                    if int(min_estoque_validado) == 0:
+                        flash(f'O Estoque não pode ser zero', 'alert-danger')
+                        return redirect(url_for('roupas'))
                     if int(gerenciamento.estoque.data) < 0:
                         flash(f'Escreva um estoque positivo', 'alert-danger')
                         return redirect(url_for('roupas'))
@@ -129,7 +144,7 @@ def roupas():
 
                     categoria_validado = gerenciamento.categoria.data.upper()
                     tamanho_validado = gerenciamento.tamanho.data.upper()
-                    roupa = Roupas(nome_roupa=nome_roupa_adc_validado, categoria=categoria_validado,tamanho=tamanho_validado,estoque=gerenciamento.estoque.data,valor=valor_validado)
+                    roupa = Roupas(nome_roupa=nome_roupa_adc_validado, categoria=categoria_validado,tamanho=tamanho_validado,estoque=gerenciamento.estoque.data,valor=valor_validado,min_estoque=min_estoque_validado,descricao=gerenciamento.descricao.data)
                     database.session.add(roupa)
                     database.session.commit()
                     flash(f'{gerenciamento.nome_roupa_adc.data} cadastrada com sucesso', 'alert-success')
@@ -253,7 +268,7 @@ def roupas():
 
 
 @app.route("/cadastro", methods=['GET', 'POST'])
-@login_required
+
 def cadastro():
     form_cadastro_usuario = FormCadastroUsuario()
     if request.method == 'POST':
@@ -310,6 +325,9 @@ def RemoverUsuario():
     usuario = [{'id': u.id, 'usuario': u.usuario } for u in table]
     if form_rem_usu.submit_del_usuario.name in request.form:
         if not form_rem_usu.validate_on_submit():
+            if form_rem_usu.nome_usuario_del.data.upper() == "ADMINISTRADOR":
+                flash(f'Erro ao deletar Usuário', 'alert-danger')
+                return redirect(url_for('RemoverUsuario'))
             usuario_deletado_validado = form_rem_usu.nome_usuario_del.data.upper()
             user = Usuario.query.filter_by(usuario=usuario_deletado_validado).all()
             try:
@@ -340,13 +358,8 @@ def vendas():
             if not venda_form.validate_on_submit():
                 try:
 
-                    valor_roupa_venda = venda_form.roupa_vendida.data
-
-                    venda = Vendas(roupas_fk=venda_form.roupa_vendida.data,nome_cliente=venda_form.nome_cliente.data.capitalize(),endereco=venda_form.endereco.data, valor_venda=venda_form.valor_total.data)
-                    database.session.add(venda)
-                    database.session.commit()
-
-                    estoque = Roupas.query.filter_by(nome_roupa=valor_roupa_venda.upper()).first()
+                    roupa_venda = venda_form.roupa_vendida.data
+                    estoque = Roupas.query.filter_by(nome_roupa=roupa_venda.upper()).first()
                     if int(venda_form.qtd_estoque_venda.data) < 0:
                         flash(f'Erro ao Vender a Roupa', 'alert-danger')
                         return redirect(url_for('roupas'))
@@ -359,8 +372,12 @@ def vendas():
                     if estoque.estoque < 0:
                         flash(f'Não é permitido Estoque negativo', 'alert-danger')
                         return redirect(url_for('roupas'))
+                    venda = Vendas(roupas_fk=venda_form.roupa_vendida.data,
+                                   nome_cliente=venda_form.nome_cliente.data.capitalize(),
+                                 valor_venda=venda_form.valor_total.data,vendedor=current_user.usuario)
+                    database.session.add(venda)
                     database.session.commit()
-                    flash(f'{valor_roupa_venda} teve sua venda concluída com sucesso', 'alert-success')
+                    flash(f'{roupa_venda} teve sua venda concluída com sucesso', 'alert-success')
                     return redirect(url_for('roupas'))
                 except:
                     flash(f'Erro ao Vender', 'alert-danger')
@@ -370,3 +387,10 @@ def vendas():
 
 
     return render_template('venda.html', venda_form=venda_form, roupas=roupas,tipo=tipo)
+@app.route("/historico", methods=['GET', 'POST'])
+@login_required
+def historico():
+    table = Vendas.query.all()
+    vendas = [{'id_venda': r.id_venda, 'roupas_fk': r.roupas_fk, 'nome_cliente': r.nome_cliente,
+               'valor_venda': r.valor_venda, 'vendedor': r.vendedor, 'data_da_venda': r.data_da_venda} for r in table]
+    return render_template('historicoVendas.html', vendas=vendas)
