@@ -1,10 +1,15 @@
 from flask import render_template, url_for, redirect, flash, request
 from loja_de_roupa.forms import FormLogin, FormCadastroUsuario, FormGerenciamentoRoupas , VendaForm,FormRemUsu
 from loja_de_roupa import app, database
-from loja_de_roupa.models import Usuario, Roupas, Categoria, Promocao, Vendas
+from loja_de_roupa.models import Usuario, Roupas, Categoria, Promocao, Vendas, Cliente, Cashback
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 from flask_login import login_required , login_user , logout_user, current_user
+import requests
+from twilio.rest import Client
+account_sid = 'AC4bf9cd5aca8f16160b0ee9c8a10a6be6'
+auth_token = '3745f5e66f7ab8f437adf2db1458ad06'
+client = Client(account_sid, auth_token)
 
 @app.route('/excluir/<int:r_id>', methods=['GET','POST'])
 def excluir(r_id):
@@ -14,6 +19,7 @@ def excluir(r_id):
     database.session.commit()
 
     return redirect(url_for('roupas'))
+
 
 def generate_codigo():
     last_id = Usuario.query.order_by(Usuario.id.desc()).first()
@@ -98,6 +104,43 @@ def login():
                 flash('Usuário ou senha incorretos!', 'alert-danger')
                 return redirect(url_for('login'))
     return render_template("login.html", form_login=form_login) #constrói um código em html
+@app.route("/cashback", methods=['GET', 'POST'])
+def cashback():
+    categorias = Categoria.query.all()
+    roupas = Roupas.query.all()
+    if request.method == 'POST':
+        return render_template("cashback.html")
+
+    return render_template("cashback.html",categorias=categorias,roupas=roupas)
+
+@app.route('/enviar-email', methods=['POST'])
+def enviar_email():
+    data = request.get_json()
+    nome = data['nome']
+    email = data['email']
+    produtos = data['produtos']
+    corpo = data['corpo']
+
+    # Aqui você pode usar a biblioteca de envio de email de sua escolha, como o Mailgun
+    # Neste exemplo, usaremos a biblioteca requests para enviar uma solicitação POST para a API do Mailgun
+
+    MAILGUN_API_KEY = '16ce98e653cdc2be15bb22db499f3fb5-6d1c649a-5edb3d37'
+    MAILGUN_DOMAIN = 'sandbox45c07b6feda14623893ad74d9bd70151.mailgun.org'
+
+    url = f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages"
+    auth = ("api", MAILGUN_API_KEY)
+    data = {
+        "from": "tonysonic1227@gmail.com",
+        "to": email,
+        "subject": "Nota fiscal da compra",
+        "html": corpo
+    }
+
+    response = requests.post(url, auth=auth, data=data)
+    if response.status_code == 200:
+        return 'Email enviado com sucesso!'
+    else:
+        return 'Erro ao enviar o email: ' + response.text, 500
 
 
 @app.route("/roupas",methods=['GET', 'POST'])
@@ -111,35 +154,35 @@ def roupas():
     if request.method == 'POST':
         if gerenciamento.submit_adc_roupa.name in request.form:
             if not gerenciamento.validate_on_submit():
-                try:
-                    valor_validado = gerenciamento.valor.data.replace(",", ".")
-                    nome_roupa_adc_validado = gerenciamento.nome_roupa_adc.data.upper()
-                    min_estoque_validado = gerenciamento.min_estoque.data
-                    if int(min_estoque_validado) < 0:
-                        flash(f'Escreva um estoque positivo', 'alert-danger')
+
+                valor_validado = gerenciamento.valor.data.replace(",", ".")
+                nome_roupa_adc_validado = gerenciamento.nome_roupa_adc.data.upper()
+                min_estoque_validado = gerenciamento.min_estoque.data
+                if int(min_estoque_validado) < 0:
+                    flash(f'Escreva um estoque positivo', 'alert-danger')
+                    return redirect(url_for('roupas'))
+                if int(min_estoque_validado) == 0:
+                    flash(f'O Estoque não pode ser zero', 'alert-danger')
+                    return redirect(url_for('roupas'))
+                if int(gerenciamento.estoque.data) < 0:
+                    flash(f'Escreva um estoque positivo', 'alert-danger')
+                    return redirect(url_for('roupas'))
+                if int(gerenciamento.estoque.data) == 0:
+                    flash(f'O Estoque não pode ser zero', 'alert-danger')
+                    return redirect(url_for('roupas'))
+                if float(valor_validado) < 0:
+                    flash(f'Escreva um valor positivo', 'alert-danger')
+                    return redirect(url_for('roupas'))
+                if float(valor_validado) == 0:
+                    flash(f'O Valor não pode ser zero', 'alert-danger')
+                    return redirect(url_for('roupas'))
+                x = 0
+                for char in gerenciamento.tamanho.data:
+                    if char == " ":
+                        x += 1
+                    if x == 1:
+                        flash(f'Não é Permitido Espaços no campo Tamanho', 'alert-danger')
                         return redirect(url_for('roupas'))
-                    if int(min_estoque_validado) == 0:
-                        flash(f'O Estoque não pode ser zero', 'alert-danger')
-                        return redirect(url_for('roupas'))
-                    if int(gerenciamento.estoque.data) < 0:
-                        flash(f'Escreva um estoque positivo', 'alert-danger')
-                        return redirect(url_for('roupas'))
-                    if int(gerenciamento.estoque.data) == 0:
-                        flash(f'O Estoque não pode ser zero', 'alert-danger')
-                        return redirect(url_for('roupas'))
-                    if float(valor_validado) < 0:
-                        flash(f'Escreva um valor positivo', 'alert-danger')
-                        return redirect(url_for('roupas'))
-                    if float(valor_validado) == 0:
-                        flash(f'O Valor não pode ser zero', 'alert-danger')
-                        return redirect(url_for('roupas'))
-                    x = 0
-                    for char in gerenciamento.tamanho.data:
-                        if char == " ":
-                            x += 1
-                        if x == 1:
-                            flash(f'Não é Permitido Espaços no campo Tamanho', 'alert-danger')
-                            return redirect(url_for('roupas'))
 
 
                     categoria_validado = gerenciamento.categoria.data.upper()
@@ -147,11 +190,32 @@ def roupas():
                     roupa = Roupas(nome_roupa=nome_roupa_adc_validado, categoria=categoria_validado,tamanho=tamanho_validado,estoque=gerenciamento.estoque.data,valor=valor_validado,min_estoque=min_estoque_validado,descricao=gerenciamento.descricao.data)
                     database.session.add(roupa)
                     database.session.commit()
+                    cliente = Cliente.query.first()  # Assuming you want to retrieve the first customer from the query
+                    nome_cliente = cliente.nome_cliente
+                    cashback = Cashback.query.first()
+                    valor = float(valor_validado)
+                    desconto = 0.15 * valor
+                    valor_com_desconto = valor - desconto
+                    texto_rasurado = ''.join([char + '̷' for char in f'R${valor:.2f} '])
+                    if cliente.cashback > cashback.min_cashback:
+                        mensagem = f'Oi, {nome_cliente}, tudo bem? 😊 Tenho uma ótima notícia par te dar. Sua cota de cashback foi atingida com sucesso e você tem R${cliente.cashback} para gastar em produtos na nossa loja, válidos até o dia {cliente.data_validade_cashback}. Aproveite e venha para a Dripstyle reinvindicar suas vantagens.'
+                        message = client.messages.create(
+                            from_='whatsapp:+14155238886',
+                            body=mensagem,
+                            to='whatsapp:+557599489435'
+                        )
+                        print(message.sid)
+                    mensagem = f'Oi, {nome_cliente}, tudo bem? Estávamos reparando em suas últimas compras em nossa loja e percebemos que podemos ter alguns produtos que possam te atrair. Segue uma lista com as nossas novidades escolhidas especialmente para você:\n- {gerenciamento.nome_roupa_adc.data.capitalize()}: {texto_rasurado}  | R${valor_com_desconto:.2f} (com desconto de 15%)\nTe aguardamos o quanto antes em nossa loja, somos muito gratos por tê-lo(a) como nosso cliente! 😊'
+
+                    message = client.messages.create(
+                        from_='whatsapp:+14155238886',
+                        body=mensagem,
+                        to='whatsapp:+557599489435'
+                    )
+                    print(message.sid)
                     flash(f'{gerenciamento.nome_roupa_adc.data} cadastrada com sucesso', 'alert-success')
                     return redirect(url_for('roupas'))
-                except:
-                    flash(f'O Estoque/valor não podem conter letras', 'alert-danger')
-                    return redirect(url_for('roupas'))
+
         if gerenciamento.submit_add_categoria.name in request.form:
             if not gerenciamento.validate_on_submit():
                 try:

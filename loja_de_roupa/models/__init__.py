@@ -1,4 +1,4 @@
-from loja_de_roupa import database , login_manager
+from loja_de_roupa import database, login_manager
 from flask_login import UserMixin
 import datetime
 import pytz
@@ -29,11 +29,16 @@ class Cliente(database.Model):
     id_cliente = database.Column(database.Integer, primary_key=True)
     nome_cliente = database.Column(database.String, nullable=False)
     cpf = database.Column(database.String, nullable=False, unique=True)
-
+    cashback = database.Column(database.Float)
+    data_validade_cashback = database.Column(database.String)
 class Promocao(database.Model):
     id_promo = database.Column(database.Integer, primary_key=True)
     porcentagem = database.Column(database.String, nullable=False)
     tipo_pagamento = database.Column(database.String, nullable=False)
+class Cashback(database.Model):
+    id_cash = database.Column(database.Integer, primary_key=True)
+    min_cashback = database.Column(database.String, nullable=False)
+    validade_adicionada = database.Column(database.String, nullable=False)
 
 class Vendas(database.Model):
     id_venda = database.Column(database.Integer, primary_key=True)

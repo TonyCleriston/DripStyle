@@ -1,0 +1,380 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script>
+  var currentPage = 'pagina5';
+
+  // Função para manipular a barra lateral
+  function handleSidebar() {
+    var sidebarLogos = document.querySelectorAll('.sidebar-logo');
+
+    for (var i = 0; i < sidebarLogos.length; i++) {
+      var sidebarLogo = sidebarLogos[i];
+
+      if (sidebarLogo.dataset.page === currentPage) {
+        sidebarLogo.classList.add('active');
+      } else {
+        sidebarLogo.classList.remove('active');
+      }
+    }
+  }
+
+
+  // Chamar a função após definir a variável currentPage
+  handleSidebar();
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+  $(document).ready(function() {
+    var minCircle = $(".min-circle");
+    var maxCircle = $(".max-circle");
+    var slider = $(".slider");
+    var sliderWidth = slider.width();
+    var minPos, maxPos;
+    var minValue = 0;
+    var maxValue = 200;
+    var minMaxDistance = 10; // Distância mínima entre os círculos
+    var gridSize = sliderWidth / (maxValue - minValue); // Tamanho do incremento para arrasto
+
+    // Função para atualizar a posição dos círculos com base nos inputs
+    function updateCircles() {
+      var minInputValue = parseInt($("#min-input").val());
+      var maxInputValue = parseInt($("#max-input").val());
+
+      if (!isNaN(minInputValue) && !isNaN(maxInputValue)) {
+        var minLeft = Math.floor(((minInputValue - minValue) / (maxValue - minValue)) * sliderWidth);
+        var maxLeft = Math.floor(((maxInputValue - minValue) / (maxValue - minValue)) * sliderWidth);
+
+        minCircle.css("left", minLeft + "px");
+        maxCircle.css("left", maxLeft + "px");
+      }
+
+      var maxInput = $("#max-input");
+      var maxInputValue = maxInput.val();
+
+      if (maxInputValue === "") {
+        maxInput.addClass("gray-background");
+      } else {
+        maxInput.removeClass("gray-background");
+      }
+    }
+
+    $("#max-input").on("input", function() {
+      var maxInputValue = parseInt($(this).val());
+      if (!isNaN(maxInputValue)) {
+        var maxLeft = Math.floor(((maxInputValue - minValue) / (maxValue - minValue)) * sliderWidth);
+        maxCircle.css("left", maxLeft + "px");
+      }
+      updateCircles();
+    });
+
+   minCircle.draggable({
+      axis: "x",
+      containment: "parent",
+      grid: [gridSize, 0],
+      drag: function(event, ui) {
+        maxPos = maxCircle.position().left - minMaxDistance;
+        if (ui.position.left >= maxPos) {
+          ui.position.left = maxPos;
+        }
+
+        var minInputValue = Math.floor(((ui.position.left / sliderWidth) * (maxValue - minValue)) + minValue);
+        $("#min-input").val(minInputValue);
+        $("#min-input").removeClass("gray-background");
+      }
+    });
+
+    maxCircle.draggable({
+      axis: "x",
+      containment: "parent",
+      grid: [gridSize, 0],
+      drag: function(event, ui) {
+        minPos = minCircle.position().left + minMaxDistance;
+        if (ui.position.left <= minPos) {
+          ui.position.left = minPos;
+        }
+
+        var maxInputValue = Math.floor(((ui.position.left / sliderWidth) * (maxValue - minValue)) + minValue);
+        $("#max-input").val(maxInputValue);
+        updateCircles();
+      }
+    });
+
+    
+
+    // Inicializa a posição dos círculos com base nos valores iniciais dos inputs
+    updateCircles();
+  });
+</script>
+<div style="display:flex;justify-content:flex-start;width:98vw;height:100vh; align-items: center ;flex-direction:column;">
+    <form style="display:flex;max-width:none;flex-direction: column;width:60vw;margin:0;margin-top:1%;padding-top:15px;">
+        <div>
+            <div style="display:flex;align-items:center;width:100%;justify-content: center;">
+        <label style="font-size:25px;margin:0;font-weight:bold;margin-top:10px;margin-right:5px;">Configurar Cashback</label>
+                </div>
+        </div>
+        <div style="width:100%;display:flex;justify-content:center;flex-direction: column;align-items:center;">
+        <div style="display:flex;flex-direction:column;margin:30px 0px 0px 0px;border: 1px solid #a1a1a1;border-radius0px;width:600px;height:80px;">
+
+        <div class="categoria-div cinza" style="display:flex;align-items: center;border-radius:0;flex-direction: row;flex-wrap: nowrap;justify-content:  flex-start;padding-left:9px;height:100%;">
+
+            <label style="font-size:25px;margin:0;margin-left:30px;text-align:center;">Validade do Cashback:</label>
+        <div class="omrs-input-group" style="width:140px;margin:0;margin-bottom:0.2rem;margin-left:2rem;">
+				<label class="omrs-input-underlined mouse" style="border-bottom: 1px solid #000;font-weight:bold;font-size:20px;">
+				  <input required style="font-size:1.6rem;">
+				  <span class="omrs-input-label">Dias</span>
+                     <span class="balao">Quando o Cliente realizar uma compra, essa será a quantidade de dias somadas ao dia atual para definir a validade do cashback.</span>
+				</label>
+			</div>
+
+            </div>
+
+            </div>
+            <div style="display:flex;flex-direction:column;margin:0px 0px 10px 0px;border: 1px solid #a1a1a1;border-radius0px;width:600px;height:80px;">
+
+        <div class="categoria-div branco" style="display:flex;align-items: center;border-radius:0;flex-direction: row;flex-wrap: nowrap;justify-content:  flex-start;padding-left:9px;height:100%;">
+            <label style="width:255px;font-size:25px;margin:0;margin-left:30px;text-align:center;">Quantidade Mínima para Uso:</label>
+        <div class="omrs-input-group" style="width:140px;margin:0;margin-bottom:0.2rem;margin-left:2rem;">
+				<label class="omrs-input-underlined mouse" style="margin-bottom:0px;border-bottom: 1px solid #000;font-weight:bold;font-size:20px;">
+				  <input required style="font-size:1.6rem;">
+				  <span class="omrs-input-label">Valor</span>
+                    <span class="balao">Valor mínimo que o cliente deve atingir para utilizar o cashback na hora da venda.</span>
+				</label>
+			</div>
+            </div>
+
+            </div>
+
+            </div>
+        <div style="display:flex;align-items:center;width:100%;justify-content: center;">
+        <input name="editar_roupa" type="submit" value="Salvar Alterações" class="submit-editar-roupa" style="width:20vw;border-radius:25px;">
+            </div>
+
+    </form>
+    <div class="switch__container" style="display:flex;margin-bottom:15px;">
+        <img src="{{ url_for('static', filename='lista-de-afazeres.png') }}" style="width:60px;height:60px;">
+  <input id="switch-shadow" class="switch switch--shadow" type="checkbox"  style="margin:0;">
+  <label for="switch-shadow" style="margin:0;"></label>
+</div>
+
+    <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+    <form id="cat" style="display:flex;max-width:none;flex-direction: column;width:60vw;margin:0;padding-top:15px;">
+        <div>
+            <div style="display:flex;align-items:center;width:100%;justify-content: center;">
+                 <img src="{{ url_for('static', filename='lista-de-afazeres.png') }}" style="width:2.1rem;height:2.1rem;margin-right:1%;">
+        <label style="font-size:25px;margin:0;font-weight:bold;margin-top:10px;margin-right:5px;">Configurar CashBack Por Categoria</label>
+                </div>
+        </div>
+        <div style="display:flex;flex-direction: row;justify-content: space-between;">
+        <label style="font-size:25px;margin:0;margin-top:35px;margin-left:6%;width:160px;">Categorias:</label>
+        <label style="font-size:25px;margin:0;margin-top:35px;margin-left:15%;width:160px;">Porcentagem:</label>
+            <label style="font-size:25px;margin:0;margin-top:35px;margin-left:20%;width:160px;text-align:end;margin-right:4%;">Ações:</label>
+            </div>
+        <div style="display:flex;flex-direction:column;border: 1px solid #a1a1a1;border-radius0px;margin-top:15px;">
+         {% set total_categorias = categorias|length %}
+    {% for categoria in categorias %}
+      {% set index = loop.index - 1 %}
+        <div class="categoria-div {% if index % 2 == 0 %}cinza{% else %}branco{% endif %}" style="display:flex;align-items: center;border-radius:0;flex-direction: row;flex-wrap: wrap;justify-content: space-between;">
+            <label style="margin:0;margin-left:6%;padding:10px;font-size:1.4em;width:10vw;">{{ categoria.nome_categoria.capitalize() }}</label>
+            <div>
+            <input type="text" style="width:6vw;height:3vh;text-align:center;margin-right:5px;">%
+                </div>
+            <div>
+
+            </div>
+             <img src="{{ url_for('static', filename='informacoes.png') }}" style="width:30px;height:30px;margin-right:6%;cursor:pointer;">
+        </div>
+        {% endfor %}
+            </div>
+        <div style="display:flex;align-items:center;width:100%;justify-content: center;">
+        <input name="editar_roupa" type="submit" value="Salvar Alterações" class="submit-editar-roupa" style="width:20vw;border-radius:25px;">
+            </div>
+    </form>
+    <div class="switch__container" style="display:flex;margin-bottom:15px;">
+        <img src="{{ url_for('static', filename='conexao-global.png') }}" style="width:60px;height:60px;">
+  <input id="switch-shadow2" class="switch switch--shadow" type="checkbox"  style="margin:0;">
+  <label for="switch-shadow2" style="margin:0;"></label>
+</div>
+ <script>
+  var switchBtn = document.getElementById("switch-shadow");
+  var form = document.getElementById("cat");
+
+   // Recuperar o estado do botão de alternância do armazenamento local
+  var switchState = localStorage.getItem("switchState");
+  if (switchState === "checked") {
+    switchBtn.checked = true;
+    form.disabled = false;
+    form.style.opacity = 1;
+  } else {
+    switchBtn.checked = false;
+    form.disabled = true;
+    form.style.opacity = 0.5;
+  }
+
+  switchBtn.addEventListener("change", function() {
+    if (this.checked) {
+      form.disabled = false;
+      form.style.opacity = 1;
+      localStorage.setItem("switchState", "checked");
+    } else {
+      form.disabled = true;
+      form.style.opacity = 0.5;
+      localStorage.setItem("switchState", "unchecked");
+    }
+  });
+</script>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+
+<form id="geral" style="display:flex;max-width:none;flex-direction: column;width:60vw;margin:0;padding-top:15px;">
+        <div>
+            <div style="display:flex;align-items:center;width:100%;justify-content: center;">
+                <img src="{{ url_for('static', filename='conexao-global.png') }}" style="width:2.1rem;height:2.1rem;margin-right:1%;">
+        <label style="font-size:25px;margin:0;font-weight:bold;margin-top:10px;margin-right:5px;">Configurar CashBack Geral</label>
+                </div>
+        </div>
+        <div style="display:flex;flex-direction: row;justify-content:  flex-start;">
+        <label style="font-size:25px;margin:0;margin-top:35px;margin-left:7px;width:22vw;text-align:start;">Valor Mínimo:</label>
+        <label style="font-size:25px;margin:0;margin-top:35px;margin-left:11px;width:15vw;">Valor Maximo:</label>
+            <label style="font-size:25px;margin:0;margin-top:35px;width:15vw;">Porcentagem:</label>
+            <label style="font-size:25px;margin:0;margin-top:35px;width:1px;"></label>
+            </div>
+        <div style="display:flex;flex-direction:column;border: 1px solid #a1a1a1;border-radius0px;margin-top:15px;">
+
+        <div class="categoria-div cinza" style="display:flex;align-items: center;border-radius:0;flex-direction: row;flex-wrap: nowrap;justify-content:  flex-start;padding-left:9px;">
+            <div style="display:flex;align-items:center;margin-right:1%;margin-left:1%;font-weight:bold;font-size:1.3em;">
+           R$<input id="min-input" type="text" style="width:6vw;height:3vh;text-align:center;font-weight:bold;font-size:0.9em;">
+                </div>
+            <div class="slider" style="margin-left:30px;margin-right:10px;">
+              <div class="slider-bar"></div>
+              <div class="slider-circle min-circle"></div>
+              <div class="slider-circle max-circle"></div>
+            </div>
+           <div style="display:flex;align-items:center;margin-right:3%;margin-left:4%;font-weight:bold;font-size:1.3em">
+           R$<input id="max-input" type="text" style="width:6vw;height:3vh;text-align:center;margin-right:3%;font-weight:bold;font-size:0.9em;">
+                </div>
+
+            <div style="display:flex;align-items:center;justify-content:center;width:30vw;">
+                <div style="display:flex;align-items:center;width:8vw;font-weight:bold;font-size:1.3em">
+            <input type="text" style="width:6vw;height:3vh;text-align:center;margin-right:5px;margin-left:50px;">%
+                    </div>
+                <img src="{{ url_for('static', filename='adicionar.png') }}" style="width:40px;height:40px;margin-left:25%;margin-right:1%;cursor:pointer;">
+            </div>
+
+        </div>
+
+            </div>
+        <div style="display:flex;align-items:center;width:100%;justify-content: center;">
+        <input name="editar_roupa" type="submit" value="Salvar Alterações" class="submit-editar-roupa" style="width:20vw;border-radius:25px;">
+            </div>
+    </form>
+    <div class="switch__container" style="display:flex;margin-bottom:15px;">
+        <img src="{{ url_for('static', filename='caracteristicas.png') }}" style="width:60px;height:60px;">
+  <input id="switch-shadow3" class="switch switch--shadow" type="checkbox"  style="margin:0;">
+  <label for="switch-shadow3" style="margin:0;"></label>
+</div>
+    <script>
+  var switchBtn2 = document.getElementById("switch-shadow2");
+  var form2 = document.getElementById("geral");
+
+   // Recuperar o estado do botão de alternância do armazenamento local
+  var switchState2 = localStorage.getItem("switchState2");
+  if (switchState2 === "checked") {
+    switchBtn2.checked = true;
+    form2.disabled = false;
+    form2.style.opacity = 1;
+  } else {
+    switchBtn2.checked = false;
+    form2.disabled = true;
+    form2.style.opacity = 0.5;
+  }
+
+  switchBtn2.addEventListener("change", function() {
+    if (this.checked) {
+      form2.disabled = false;
+      form2.style.opacity = 1;
+      localStorage.setItem("switchState2", "checked");
+    } else {
+      form2.disabled = true;
+      form2.style.opacity = 0.5;
+      localStorage.setItem("switchState2", "unchecked");
+    }
+  });
+</script>
+    <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+   <form id="prod" style="display:flex;max-width:none;flex-direction: column;width:60vw;margin:0;padding-top:15px;">
+        <div>
+            <div style="display:flex;align-items:center;width:100%;justify-content: center;">
+                <img src="{{ url_for('static', filename='caracteristicas.png') }}" style="width:2.1rem;height:2.1rem;margin-right:1%;">
+        <label style="font-size:25px;margin:0;font-weight:bold;margin-top:10px;margin-right:5px;">Configurar CashBack Por Produto</label>
+                </div>
+        </div>
+       <div class="search-bar" style="display:flex;justify-content: center;width:100%;margin-top:13px;">
+  <input style="padding:7px;width:370px;height:35px;" type="text" id="search-input" placeholder="Pesquisar roupa" oninput="filterTable()">
+</div>
+        <div style="display:flex;flex-direction: row;justify-content: space-between;">
+            <label style="font-size:25px;margin:0;margin-top:35px;width:160px;">Codigo:</label>
+        <label style="font-size:25px;margin:0;margin-top:35px;width:200px;">Produtos:</label>
+            <label style="font-size:25px;margin:0;margin-top:35px;width:160px;margin-left:7%;">Valor:</label>
+        <label style="font-size:25px;margin:0;margin-top:35px;width:160px;">Porcentagem:</label>
+            <label style="font-size:25px;margin:0;margin-top:35px;width:160px;text-align:end;">Ações:</label>
+            </div>
+
+        <div style="display:flex;flex-direction:column;border: 1px solid #a1a1a1;border-radius0px;margin-top:15px;">
+         {% set total_roupas = roupas|length %}
+    {% for roupa in roupas %}
+      {% set index = loop.index - 1 %}
+        <div class="categoria-div {% if index % 2 == 0 %}cinza{% else %}branco{% endif %}" style="display:flex;align-items: center;border-radius:0;flex-direction: row;flex-wrap: wrap;justify-content: space-between;">
+            <label style="margin:0;margin-left:2%;font-size:1.4em;width:4vw;">{{ roupa.id_roupas }}</label>
+            <label style="margin:0;margin-left:2%;padding:10px;font-size:1.4em;width:16vw;">{{ roupa.nome_roupa.capitalize() }}</label>
+            <label style="margin:0;padding:10px;font-size:1.4em;width:10vw;">R${{ roupa.valor }}</label>
+            <div style="font-size:1.1em">
+            <input type="text" style="width:6vw;height:3vh;text-align:center;margin-right:5px;">% = R$0.0
+                </div>
+            <div>
+
+            </div>
+             <img src="{{ url_for('static', filename='informacoes.png') }}" style="width:30px;height:30px;margin-right:2%;cursor:pointer;">
+        </div>
+        {% endfor %}
+            </div>
+        <div class="pagination">
+    <button class="prev">&#60;</button>
+    <span class="page-number">1</span>
+    <button class="next">&#62;</button>
+  </div>
+        <div style="display:flex;align-items:center;width:100%;justify-content: center;">
+        <input name="editar_roupa" type="submit" value="Salvar Alterações" class="submit-editar-roupa" style="width:20vw;border-radius:25px;">
+            </div>
+    </form>
+<script>
+  var switchBtn3 = document.getElementById("switch-shadow3");
+  var form3 = document.getElementById("prod");
+
+   // Recuperar o estado do botão de alternância do armazenamento local
+  var switchState3 = localStorage.getItem("switchState3");
+  if (switchState3 === "checked") {
+    switchBtn3.checked = true;
+    form3.disabled = false;
+    form3.style.opacity = 1;
+  } else {
+    switchBtn3.checked = false;
+    form3.disabled = true;
+    form3.style.opacity = 0.5;
+  }
+
+  switchBtn3.addEventListener("change", function() {
+    if (this.checked) {
+      form3.disabled = false;
+      form3.style.opacity = 1;
+      localStorage.setItem("switchState3", "checked");
+    } else {
+      form3.disabled = true;
+      form3.style.opacity = 0.5;
+      localStorage.setItem("switchState3", "unchecked");
+    }
+  });
+</script>
+</div>
+{% endblock %}

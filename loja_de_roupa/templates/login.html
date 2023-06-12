@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block body %}
-        <form method="POST">
+        <form method="POST" style="margin-top:10%;">
           <h2>Login</h2>
             {{ form_login.usuario.label(for="username") }}
             {{ form_login.usuario(id="username") }}

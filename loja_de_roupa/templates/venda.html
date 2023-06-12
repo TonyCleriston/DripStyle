@@ -2,23 +2,137 @@
 
 {% block body %}
 
-<div style="display:flex;justify-content:center;width:100vw;height:80vh; align-items: flex-start ;">
+<script>
+function removerLinha(button) {
+    // Remover a linha da tabela
+    var row = button.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+  }
+  ////////////////
+    function Carrinho() {
 
-    <div style="display:flex;flex-direction:column;width:70vw; margin-left:3%;margin-bottom:7%;align-items: center;padding:30px;">
+    var selectElement = document.getElementById('roupa_nome');
+    var idRoupaSelecionada = selectElement.value;
+    if (idRoupaSelecionada == ""){
+        alert('Selecione uma Roupa!!')
+        return;
+        }
+    var quantidadeInt = document.getElementById('username9').value;
+    var quantidade = parseInt(quantidadeInt);
+
+if (isNaN(quantidade)){
+alert('A quantidade deve ser numérica')
+return;
+}
+
+if (quantidade == ""){
+alert('A quantidade está vazia')
+return;
+}
+if (quantidade <= 0){
+alert('A quantidade não pode ser menor que 0')
+return;
+}
+
+var roupasList = document.getElementById('roupas-list');
+  var roupasItems = roupasList.getElementsByClassName('roupa-item');
+
+
+  for (var i = 0; i < roupasItems.length; i++) {
+    var roupaItem = roupasItems[i];
+    var idRoupa = roupaItem.getAttribute('data-id');
+
+    if (idRoupa === idRoupaSelecionada.toString()) {
+      var nomeRoupa = roupaItem.getAttribute('data-nome');
+            var carrinhoTable = document.getElementById('carrinho-table');
+  var rows = carrinhoTable.getElementsByTagName('tr');
+if (rows.length > 0) {
+
+  for (var x = 0; x < rows.length; x++) {
+    var row = rows[x];
+    var nomeRoupaColuna = row.getElementsByTagName('td')[0];
+   if (nomeRoupaColuna && nomeRoupaColuna.innerText === nomeRoupa) {
+      alert('Esta roupa já foi adicionada ao carrinho');
+      return;
+    }
+  }
+  }
+      var estoqueInt = roupaItem.getAttribute('data-estoque');
+      var estoque = parseInt(estoqueInt);
+      var valorSemFormato = roupaItem.getAttribute('data-valor');
+      var valor = parseFloat(valorSemFormato).toFixed(2);
+
+
+      break;
+    }
+  }
+
+console.log(estoque);
+console.log(quantidade);
+      if (quantidade > estoque) {
+      alert('A quantidade está maior que o estoque')
+        return;
+      }
+    var totalSemFormato = quantidade * valor;
+    var total = parseFloat(totalSemFormato).toFixed(2);
+
+    // Criar a nova linha da tabela
+    var newRow = document.createElement('tr');
+    newRow.innerHTML = `
+      <td>${nomeRoupa}</td>
+      <td>${estoque}</td>
+      <td>${quantidade}</td>
+      <td>R$ ${valor}</td>
+      <td>R$ ${total}</td>
+      <td><button class="excluir-button" style="margin:0;" onclick="removerLinha(this)">Remover</button></td>
+    `;
+
+    // Adicionar a nova linha à tabela
+    var tableBody = document.querySelector('#carrinho-table tbody');
+    tableBody.appendChild(newRow);
+
+    var tabela = document.getElementById("carrinho-table");
+    var linhas = tabela.getElementsByTagName("tr");
+    var total = 0;
+
+    for (var i = 1; i < linhas.length; i++) {
+      var valorTotal = linhas[i].cells[4].innerText;
+      valorTotal = valorTotal.replace("R$", "").trim();
+      total += parseFloat(valorTotal);
+    }
+
+    var labelValorTotal = document.getElementById("cavalo");
+    labelValorTotal.textContent = "Valor Total da Venda: R$" + total.toFixed(2);
+  }
+
+  // Chamada inicial para calcular o valor total
+  calcularValorTotal();
+</script>
+
+
+
+    };
+
+
+</script>
+
+<div style="display:flex;justify-content:center;width:98vw;height:80vh; align-items: flex-start ;">
+
+    <div style="display:flex;flex-direction:column;width:70vw; margin-left:3%;margin-bottom:7%;align-items: center;padding:30px;padding-top:10px;">
         <form style="padding:20px;max-height:350px; width:100%;margin:0;max-width:unset;display:flex; flex-wrap: wrap;  align-items: center;    justify-content: center;">
         <div style="border-right: 3px solid black;display:flex; flex-wrap: wrap;padding-right: 30px;">
           {{ venda_form.roupa_venda.label(style="font-weight:bold;width:6vw;") }}
             <select id="roupa_nome" name="roupa_venda" style="width:18vw;margin-left:10px;">
                 <option value="" disabled selected>Selecione a roupa:</option>
                 {% for r in roupas %}
-                <option value="{{ r.valor }}">{{ r.nome_roupa.lower().capitalize() }}</option>
+                <option value="{{ r.id }}" data-nome="{{ r.nome_roupa.capitalize() }}" data-estoque="{{ r.estoque }}">{{ r.nome_roupa.lower().capitalize() }}</option>
                 {% endfor %}
                 </select>
  </div>
              {{ venda_form.roupa_vendida(value="",style="display:none;") }}
 <div style="border-right: 3px solid black;display:flex; flex-wrap: wrap; padding-right: 30px;">
             {{ venda_form.qtd_estoque_venda.label(for="username9",style="width:7vw;margin-left:30px;font-weight:bold;") }}
-            {{ venda_form.qtd_estoque_venda(id="username9",style="width:6vw;margin-left:10px;") }}
+            {{ venda_form.qtd_estoque_venda(id="username9",style="width:6vw;margin-left:10px;text-align:center;") }}
     </div>
             <button type="button" onclick="Carrinho()" style="margin:0;text-align:center;padding:0;margin-left:30px;background-color:#5555ff; width:10vw;height:40px;cursor:pointer;">Adicionar ao Carrinho</button>
 
@@ -36,54 +150,387 @@
         </tr>
     </thead>
     <tbody>
-        {% for item in carrinho %}
-        <tr>
-            <td>{{ item.nome }}</td>
-            <td>{{ item.quantidade }}</td>
-            <td>{{ item.valor_total }}</td>
-        </tr>
-        {% endfor %}
+
     </tbody>
 </table>
-
-<script>
-    function Carrinho() {
-        event.preventDefault();
-
-        var nomeRoupa = document.getElementById("roupa_nome").options[document.getElementById("roupa_nome").selectedIndex].text;
-        var valorRoupa = document.getElementById("roupa_nome").value;
-        var quantidade = document.getElementById("username9").value;
-        var valorTotal = valorRoupa * quantidade;
-
-        var newRow = document.createElement("tr");
-        newRow.innerHTML = "<td>" + nomeRoupa + "</td><td>" + quantidade + "</td><td>" + valorTotal + "</td>";
-
-        document.getElementById("carrinho-table").getElementsByTagName("tbody")[0].appendChild(newRow);
-    });
-</script>
+<div id="roupas-list" style="display: none;">
+  {% for roupa in roupas %}
+    <div class="roupa-item"
+         data-id="{{ roupa.id }}"
+         data-nome="{{ roupa.nome_roupa }}"
+         data-estoque="{{ roupa.estoque }}"
+         data-valor="{{ roupa.valor }}"
+    ></div>
+  {% endfor %}
 </div>
-     <div style="display:flex; width:360px;height:95%;margin-top:4%;">
-         <form method="POST" style="max-height:460px; width:360px;">
-            {{ venda_form.cpf.label(for="username13") }}
-            {{ venda_form.cpf(id="username13") }}
+
+
+</div>
+     <div style="display:flex; width:360px;">
+         <form method="POST" style="width:24vw;padding:20px;">
+            {{ venda_form.cpf.label(for="username12",style="margin-top:1px;") }}
+            {{ venda_form.cpf(id="username12",style="height:35px;") }}
+
+             {{ venda_form.email_cliente.label(for="username13") }}
+            {{ venda_form.email_cliente(id="username13",style="height:35px;") }}
+
+             {{ venda_form.telefone_cliente.label(for="username14") }}
+            {{ venda_form.telefone_cliente(id="username14",style="height:35px;") }}
 
             {{ venda_form.nome_cliente.label(for="username10") }}
-            {{ venda_form.nome_cliente(id="username10") }}
+            {{ venda_form.nome_cliente(id="username10",style="height:35px;") }}
+             <div style="display:flex;">
+             <div style="display:block;">
          {{ venda_form.tipo_pagamento.label() }}
-           <select id="tipo_pagamento" name="tipo_pagamento">
+           <select id="tipo_pagamento" name="tipo_pagamento"  style="width:252px;height:35px;font-size:14px;font-weight:bold;text-align:center;padding:0px;">
                 <option value="" disabled selected>Selecione a forma de pagamento:</option>
                 {% for t in tipo %}
                 <option value="{{ t.porcentagem }}">{{ t.tipo_pagamento.lower().capitalize() }}</option>
                 {% endfor %}
                 </select>
-
+                </div>
+                 <button class="square-button" style=" margin-top:46px;margin-left:5px; width: 30px;height: 30px;background-color: white;border: 1px solid black;padding: 0;display: flex;justify-content: center;align-items: center;cursor: pointer;">
+                    <span class="plus-symbol" style="font-size: 30px;color:black;">+</span>
+                    </button>
+                 </div>
+             <label for="cashback-checkbox" style=" display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+  font-size: 20px;
+font-weight:bold;">
+  <input type="checkbox" id="cashback-checkbox">
+  Usar Cashback
+</label>
             {{ venda_form.valor_total.label(id="cavalo") }}
              {{ venda_form.valor_total(value="",style="display:none;",id="cavalo2") }}
 
-            {{ venda_form.submit_venda() }}
+           <input id="submit_venda" name="submit_venda" style="margin-top:5px;" type="button" value="Vender">
          </form>
 </div>
 </div>
+<script>
+    document.getElementById('submit_venda').addEventListener('click', function() {
+  var nomeCliente = document.getElementById('username10').value;
+  var emailCliente = document.getElementById('username13').value;
+
+  // Obtenha os dados da tabela de carrinho
+  var produtos = [];
+var tabela = document.getElementById('carrinho-table');
+var linhas = tabela.getElementsByTagName('tr');
+var totalVendaSemFormato = 0;
+for (var i = 1; i < linhas.length; i++) {
+  var colunas = linhas[i].getElementsByTagName('td');
+  var nomeRoupa = colunas[0].innerText;
+  var valor = colunas[3].innerText.replace('R$', '').trim();
+  var quantidade = parseInt(colunas[2].innerText.trim());
+  var totalProdutoSemFormato = quantidade * valor;
+  var totalProduto = parseFloat(totalProdutoSemFormato).toFixed(2);
+
+  produtos.push({ nome: nomeRoupa, valor: valor, quantidade: quantidade, totalProduto: totalProduto });
+  totalVendaSemFormato += totalProduto;
+}
+var totalVenda = parseFloat(totalVendaSemFormato).toFixed(2);
+ var produtosHtml = '<ul>';
+    var produto = produtos[i];
+    var productListDiv = document.getElementById('var');
+    for (var i = 0; i < produtos.length; i++) {
+  var produto = produtos[i];
+
+  produtosHtml += '<li>' + produto.nome + ': ' + produto.quantidade + ' x R$ ' + produto.valor + ' = R$ ' + produto.totalProduto + '</li>';
+}
+
+produtosHtml += '</ul>';
+
+produtosHtml += 'Valor total da venda: R$ ' + totalVenda;
+
+var productListDiv = document.getElementById('var');
+
+function calcularTotal(produtos) {
+  let total = 0;
+  let totalSemFormato = 0;
+  for (let i = 0; i < produtos.length; i++) {
+    const produto = produtos[i];
+    totalSemFormato += produto.quantidade * produto.valor;
+    total = parseFloat(totalSemFormato).toFixed(2);
+  }
+  return total;
+}
+  // Construa o corpo do email
+  var emailBody = `
+   <!DOCTYPE html>
+
+<html lang="en" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">
+<head>
+<title></title>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG/></o:OfficeDocumentSettings></xml><![endif]-->
+<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			padding: 0;
+		}
+
+		a[x-apple-data-detectors] {
+			color: inherit !important;
+			text-decoration: inherit !important;
+		}
+
+		#MessageViewBody a {
+			color: inherit;
+			text-decoration: none;
+		}
+
+		p {
+			line-height: inherit
+		}
+
+		.desktop_hide,
+		.desktop_hide table {
+			mso-hide: all;
+			display: none;
+			max-height: 0px;
+			overflow: hidden;
+		}
+
+		.image_block img+div {
+			display: none;
+		}
+		@media (max-width:520px) {
+			.desktop_hide table.icons-inner {
+				display: inline-block !important;
+			}
+
+			.icons-inner {
+				text-align: center;
+			}
+
+			.icons-inner td {
+				margin: 0 auto;
+			}
+
+			.row-content {
+				width: 100% !important;
+			}
+
+			.mobile_hide {
+				display: none;
+			}
+
+			.stack .column {
+				width: 100%;
+				display: block;
+			}
+
+			.mobile_hide {
+				min-height: 0;
+				max-height: 0;
+				max-width: 0;
+				overflow: hidden;
+				font-size: 0px;
+			}
+
+			.desktop_hide,
+			.desktop_hide table {
+				display: table !important;
+				max-height: none !important;
+			}
+		}
+	</style>
+</head>
+<body style="background-color: #FFFFFF; margin: 0; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;">
+<table border="0" cellpadding="0" cellspacing="0" class="nl-container" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #FFFFFF;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #232323; color: #000000; width: 500px;" width="500">
+<tbody>
+<tr>
+<td class="column column-1" style="font-weight: 400; text-align: left; mso-table-lspace: 0pt; mso-table-rspace: 0pt; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<table border="0" cellpadding="0" cellspacing="0" class="image_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
+<div align="center" class="alignment" style="line-height:10px"><img src="{{ url_for('static', filename='Logo.png') }}" style="display: block; height: auto; border: 0; width: 242px; max-width: 100%;" width="242"/></div>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="20" cellspacing="0" class="heading_block block-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad">
+<h1 style="margin: 0; color: #84bdf3; font-size: 23px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 120%; text-align: center; direction: ltr; font-weight: 700; letter-spacing: normal; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder">DripStyle</span></h1>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" class="heading_block block-3" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad" style="width:100%;text-align:center;">
+<h2 style="margin: 0; color: #cfcfcf; font-size: 18px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 120%; text-align: center; direction: ltr; font-weight: 700; letter-spacing: normal; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder">Agradecemos Sua Preferência</span></h2>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="25" cellspacing="0" class="heading_block block-4" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad">
+<h2 style="margin: 0; color: #cfcfcf; font-size: 21px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 120%; text-align: left; direction: ltr; font-weight: 700; letter-spacing: normal; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder">Olá, Caro ${nomeCliente}</span></h2>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" class="heading_block block-5" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad" style="width:100%;text-align:center;padding-right:25px;padding-bottom:25px;padding-left:45px;">
+<h2 style="margin: 0; color: #cfcfcf; font-size: 16px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 120%; text-align: left; direction: ltr; font-weight: 700; letter-spacing: normal; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder">Obrigado por comprar em nossa loja. <br/>Seguem os detalhes da sua compra:</span></h2>
+</td>
+</tr>
+</table><!--[if mso]><style>#list-r0c0m5 ul{margin: 0 !important; padding: 0 !important;} #list-r0c0m5 ul li{mso-special-format: bullet;}#list-r0c0m5 .levelOne li {margin-top: 0 !important;} #list-r0c0m5 .levelOne {margin-left: -20px !important;}#list-r0c0m5 .levelTwo li {margin-top: 0 !important;} #list-r0c0m5 .levelTwo {margin-left: 20px !important;}#list-r0c0m5 .levelThree li {margin-top: 0 !important;} #list-r0c0m5 .levelThree {margin-left: 60px !important;}#list-r0c0m5 .levelFour li {margin-top: 0 !important;} #list-r0c0m5 .levelFour {margin-left: 100px !important;}#list-r0c0m5 .levelFive li {margin-top: 0 !important;} #list-r0c0m5 .levelFive {margin-left: 140px !important;}#list-r0c0m5 .levelSix li {margin-top: 0 !important;} #list-r0c0m5 .levelSix {margin-left: 180px !important;}</style><![endif]-->
+<table border="0" cellpadding="10" cellspacing="0" class="list_block block-6" id="list-r0c0m5" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;" width="100%">
+<tr>
+<td class="pad">
+<div class="levelOne" style="margin-left: 0;">
+<ul class="leftList" start="1" style="margin-top: 0; margin-bottom: 0; padding: 0; padding-left: 20px; font-weight: 400; text-align: left; color: #cfcfcf; font-size: 14px; font-family: Arial,'Helvetica Neue',Helvetica,sans-serif; line-height: 120%; direction: ltr; letter-spacing: 0; mso-line-height-alt: 16.8px; list-style-type: disc;">
+  ${produtos
+    .map((produto) => {
+      const subtotalSemFormato = produto.quantidade * produto.valor;
+      var subtotal = parseFloat(subtotalSemFormato).toFixed(2);
+      return `<li style="display:flex;margin-bottom:5px;"><div style="display:flex;flex-direction: column;width:70%;justify-content: flex-start;"><div>${produto.nome}<br><div style="font-size:12px;margin:3px;color:#a1a1a1;">${produto.quantidade} x ${produto.valor}</div></div></div><div style="display:flex;width:30%;justify-content:flex-end;">R$ ${subtotal}</div></li>`;
+    })
+    .join('')}
+</ul>
+</div>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="10" cellspacing="0" class="divider_block block-7" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad">
+<div align="center" class="alignment">
+<table border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="divider_inner" style="font-size: 1px; line-height: 1px; border-top: 1px solid #BBBBBB;"><span> </span></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" class="heading_block block-8" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad" style="width:100%;text-align:center;">
+<h2 style="margin: 0; color: #cfcfcf; font-size: 14px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 120%; text-align: center; direction: ltr; font-weight: 700; letter-spacing: normal; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder"><div style="display:flex;font-size:12px;margin:10px;color:#a1a1a1;">Nº do pedido:645d374876651e0</div></span></h2>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="10" cellspacing="0" class="heading_block block-9" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad">
+<h2 style="margin: 0; color: #cfcfcf; font-size: 18px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 120%; text-align: center; direction: ltr; font-weight: 700; letter-spacing: normal; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder"><div style="display:flex;"><div style="display:flex;width:70%;">Total do Pedido:</div><div style="display:flex;width:30%;"> R$${calcularTotal(produtos)}</div></div></span></h2>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="10" cellspacing="0" class="heading_block block-10" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad">
+<h2 style="margin: 0; color: #cfcfcf; font-size: 18px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 120%; text-align: center; direction: ltr; font-weight: 700; letter-spacing: normal; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder"><div style="display:flex;"><div style="display:flex;width:70%;">CashBack Ganho:</div><div style="display:flex;width:30%;"> +R$25</div></div></span></h2>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="10" cellspacing="0" class="heading_block block-11" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad">
+<h2 style="margin: 0; color: #cfcfcf; font-size: 18px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 120%; text-align: center; direction: ltr; font-weight: 700; letter-spacing: normal; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder"><div style="display:flex;"><div style="display:flex;width:70%;">CashBack Atual:</div><div style="display:flex;width:30%;"> R$60</div></div></span></h2>
+</td>
+</tr>
+</table>
+<table border="0" cellpadding="20" cellspacing="0" class="heading_block block-12" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad">
+<h2 style="margin: 0; color: #cfcfcf; font-size: 14px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 120%; text-align: center; direction: ltr; font-weight: 700; letter-spacing: normal; margin-top: 0; margin-bottom: 0;"><span class="tinyMce-placeholder">DripStyle - Compromisso com a melhor qualidade e o menor preço!</span></h2>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-2" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tbody>
+<tr>
+<td>
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row-content stack" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 500px;" width="500">
+<tbody>
+<tr>
+<td class="column column-1" style="font-weight: 400; text-align: left; mso-table-lspace: 0pt; mso-table-rspace: 0pt; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;" width="100%">
+<table border="0" cellpadding="0" cellspacing="0" class="icons_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="pad" style="vertical-align: middle; color: #9d9d9d; font-family: inherit; font-size: 15px; padding-bottom: 5px; padding-top: 5px; text-align: center;">
+<table cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
+<tr>
+<td class="alignment" style="vertical-align: middle; text-align: center;"><!--[if vml]><table align="left" cellpadding="0" cellspacing="0" role="presentation" style="display:inline-block;padding-left:0px;padding-right:0px;mso-table-lspace: 0pt;mso-table-rspace: 0pt;"><![endif]-->
+<!--[if !vml]><!-->
+<table cellpadding="0" cellspacing="0" class="icons-inner" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-block; margin-right: -4px; padding-left: 0px; padding-right: 0px;"><!--<![endif]-->
+<tr>
+<td style="vertical-align: middle; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 6px;"><a href="https://portfolio-tiagolima.netlify.app" style="text-decoration: none;" target="_blank"><img align="center" alt="" class="icon" height="32" src="{{ url_for('static', filename='Logo.png') }}" style="display: block; height: auto; margin: 0 auto; border: 0;" width="34"/></a></td>
+<td style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 15px; color: #9d9d9d; vertical-align: middle; letter-spacing: undefined; text-align: center;"><a href="https://www.designedwithbee.com/" style="color: #9d9d9d; text-decoration: none;" target="_blank">Designed with DripStyle</a></td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table><!-- End -->
+</body>
+</html>
+  `;
+
+  // Envie os dados para o servidor para enviar o email
+  fetch('/enviar-email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      nome: nomeCliente,
+      email: emailCliente,
+      produtos: produtos,
+      corpo: emailBody
+    })
+  })
+    .then(function(response) {
+      if (response.ok) {
+        console.log('Email enviado com sucesso!');
+        // Faça algo após o email ser enviado, como redirecionar para uma página de confirmação
+      } else {
+        console.error('Erro ao enviar o email:', response.statusText);
+      }
+    })
+    .catch(function(error) {
+      console.error('Erro ao enviar o email:', error);
+    });
+});
+</script>
 <script>
   var currentPage = 'pagina3';
 
@@ -105,83 +552,5 @@
   // Chamar a função após definir a variável currentPage
   handleSidebar();
 </script>
-<script>
-var select = document.getElementById('roupa_nome');
-var quantidade = document.getElementById('username9');
-var tipo = document.getElementById('tipo_pagamento');
-var valorTotal = document.getElementById('cavalo');
-var valorTotalPromocao = document.getElementById('cavalo2');
 
-select.addEventListener("change", (event) => {
- var option = select.options[select.selectedIndex];
- var option1 = tipo.options[tipo.selectedIndex];
-  var valor = option.value;
-  var valor1 = option1.value;
-  console.log(valor);
-  var valorTotalCalculado = (parseFloat(valor) * parseFloat(quantidade.value)) * (1 - parseFloat(valor1));
-  if (isNaN(valorTotalCalculado)) {
-  valorTotalCalculado = 0;
-  }
-  const select1 = document.getElementById('roupa_nome');
-   const select2 = document.getElementById('roupa_vendida');
-const opcoes = select.getElementsByTagName('option');
-var textoSelecionado = select.options[select.selectedIndex].text;
-console.log(textoSelecionado);
-for (let i = 0; i < opcoes.length; i++) {
-console.log(opcoes[i].textContent);
-       if (opcoes[i].textContent === textoSelecionado){
-        select2.setAttribute('value', opcoes[i].textContent);
-        opcoes[i].setAttribute('selected', 'selected');
-        break;
-}
-}
-  valorTotal.textContent = "Valor Total da Venda: R$" + valorTotalCalculado.toFixed(2);
-  valorTotalPromocao.value = valorTotalCalculado.toFixed(2);
-});
-
-quantidade.addEventListener("input", (event) => {
- var option = select.options[select.selectedIndex];
- var option1 = tipo.options[tipo.selectedIndex];
-  var valor = option.value;
-  var valor1 = option1.value;
-  console.log(valor);
-  var valorTotalCalculado = (parseFloat(valor) * parseFloat(quantidade.value)) * (1 - parseFloat(valor1));
-  if (isNaN(valorTotalCalculado)) {
-  valorTotalCalculado = 0;
-}
-  valorTotal.textContent = "Valor Total da Venda: R$" + valorTotalCalculado.toFixed(2);
-  valorTotalPromocao.value = valorTotalCalculado.toFixed(2);
-
-});
-
-quantidade.addEventListener("input", (event) => {
-var option = select.options[select.selectedIndex];
- var option1 = tipo.options[tipo.selectedIndex];
-  var valor = option.value;
-  var valor1 = option1.value;
-  console.log(valor);
-  var valorTotalCalculado = (parseFloat(valor) * parseFloat(quantidade.value)) * (1 - parseFloat(valor1));
-  if (isNaN(valorTotalCalculado)) {
-  valorTotalCalculado = 0;
-}
-  valorTotal.textContent = "Valor Total da Venda: R$" + valorTotalCalculado.toFixed(2);
-  valorTotalPromocao.value = valorTotalCalculado.toFixed(2);
-
-});
-
-tipo.addEventListener("change", (event) => {
-var option = select.options[select.selectedIndex];
- var option1 = tipo.options[tipo.selectedIndex];
-  var valor = option.value;
-  var valor1 = option1.value;
-  console.log(valor);
-  var valorTotalCalculado = (parseFloat(valor) * parseFloat(quantidade.value)) * (1 - parseFloat(valor1));
-  if (isNaN(valorTotalCalculado)) {
-  valorTotalCalculado = 0;
-}
-  valorTotal.textContent = "Valor Total da Venda: R$" + valorTotalCalculado.toFixed(2);
-  valorTotalPromocao.value = valorTotalCalculado.toFixed(2);
-
-});
-</script>
 {% endblock %}

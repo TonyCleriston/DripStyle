@@ -108,7 +108,7 @@
 <div class="search-bar" style="margin-top:13px;margin-bottom:22px;">
   <input style="padding:7px;" type="text" id="search-input" placeholder="Pesquisar roupa" oninput="filterTable()">
 </div>
-        <table style="width: 1000px; margin:0;" id="clothes-table">
+        <table style="width: 1000px; margin:0;margin-bottom:25px;" id="clothes-table">
             <thead>
               <tr>
                 <th>id</th>
@@ -128,17 +128,18 @@
                     <th>{{ r.nome_roupa }}</th>
                      <th>{{ r.categoria }}</th>
                     <th>R$ {{ r.valor }}</th>
-                    <th style=" font-size:20px;font-family:monospace;background-color: {% if r.estoque < r.min_estoque/2 %}#f90000b5{% elif r.estoque < r.min_estoque %}yellow{% else %}#1cf11c{% endif %}">
+                     <th style="color: #000;font-size:23px;font-family:revert;background-color: {% if r.estoque < r.min_estoque/2 %}#f90000b5{% elif r.estoque < r.min_estoque %}yellow{% else %}#1cf11c{% endif %}">
                             {{ r.estoque }}
                         </th>
                      <th>{{ r.tamanho }}</th>
                     <th>
-                    <button id="editar-button" class="editar-button" data-id="{{ r.id }}" data-nome="{{ r.nome_roupa }}" data-valor="{{ r.valor }}" data-tamanho="{{ r.tamanho }}" data-categoria="{{ r.categoria }}" data-estoque="{{ r.estoque }}" data-descricao="{{ r.descricao }}" data-min="{{ r.min_estoque }}">EDITAR</button>
+                    <button style="margin:0;" id="editar-button" class="editar-button" data-id="{{ r.id }}" data-nome="{{ r.nome_roupa }}" data-valor="{{ r.valor }}" data-tamanho="{{ r.tamanho }}" data-categoria="{{ r.categoria }}" data-estoque="{{ r.estoque }}" data-descricao="{{ r.descricao }}" data-min="{{ r.min_estoque }}">EDITAR</button>
                     </th>
                     <th>
                     <form style="all:unset;" action="/excluir/{{ r.id }}" method="POST">
-                        <button  class="excluir-button" type="submit" data-product-name="{{r.nome_roupa}}" data-product-id="{{ r.id }}">EXCLUIR</button>
+                        <button style="margin:0;" class="excluir-button" type="submit" data-product-name="{{r.nome_roupa}}" data-product-id="{{ r.id }}">EXCLUIR</button>
                     </form>
+
                 </th>
                 </tr>
                  {% endfor %}

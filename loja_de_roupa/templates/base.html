@@ -8,6 +8,7 @@
 </head>
 
     <body>
+
          <script>
 
 
@@ -92,9 +93,51 @@ window.addEventListener('DOMContentLoaded', function() {
         <span class="sidebar-word">Histórico de Vendas</span>
         </div>
         </a>
+         <a href="{{ url_for('cashback') }}" style="width:304px;">
+       <div class="sidebar-logo {% if current_page == '/cashback' %}active{% endif %}" data-page="pagina5">
+
+        <img src="{{ url_for('static', filename='cofrinho.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
+        <span class="sidebar-word">CashBack</span>
+        </div>
+        </a>
+        <a href="{{ url_for('cashback') }}" style="width:304px;">
+       <div class="sidebar-logo {% if current_page == '/cashback' %}active{% endif %}" data-page="">
+
+        <img src="{{ url_for('static', filename='cliente.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
+        <span class="sidebar-word">Clientes</span>
+        </div>
+        </a>
+        <a href="{{ url_for('cashback') }}" style="width:304px;">
+       <div class="sidebar-logo {% if current_page == '/cashback' %}active{% endif %}" data-page="">
+
+        <img src="{{ url_for('static', filename='botao-curtir.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
+        <span class="sidebar-word" style="font-size:15px;">Relacionamento com o Cliente</span>
+        </div>
+        </a>
+        <a href="{{ url_for('cashback') }}" style="width:304px;">
+       <div class="sidebar-logo {% if current_page == '/cashback' %}active{% endif %}" data-page="">
+
+        <img src="{{ url_for('static', filename='pacotes.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
+        <span class="sidebar-word">Fornecedores</span>
+        </div>
+        </a>
+        <a href="{{ url_for('cashback') }}" style="width:304px;">
+       <div class="sidebar-logo {% if current_page == '/cashback' %}active{% endif %}" data-page="">
+
+        <img src="{{ url_for('static', filename='informacao-financeira.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
+        <span class="sidebar-word">Relatórios</span>
+        </div>
+        </a>
+        <a href="{{ url_for('cashback') }}" style="width:304px;">
+       <div class="sidebar-logo {% if current_page == '/cashback' %}active{% endif %}" data-page="">
+
+        <img src="{{ url_for('static', filename='suporte-online.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
+        <span class="sidebar-word">Suporte</span>
+        </div>
+        </a>
         <hr size="1">
  <a onclick="return checkAccess();" href="{% if current_user.id == '001' and current_user.usuario == 'ADMINISTRADOR' %}{{ url_for('RemoverUsuario') }}{% else %}javascript:void(0);{% endif %}" style="width:304px;">
-        <div class="sidebar-logo {% if current_page != '/RemoverUsuario' %}active{% endif %}" data-page="pagina5">
+        <div class="sidebar-logo {% if current_page != '/RemoverUsuario' %}active{% endif %}" data-page="pagina6">
 
         <img src="{{ url_for('static', filename='remover-usuario.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
         <span class="sidebar-word">Remover Usuários</span>

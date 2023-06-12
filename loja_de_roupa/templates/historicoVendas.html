@@ -31,7 +31,27 @@
           </table>
 </div>
 </div>
+<script>
+  var currentPage = 'pagina4';
 
+  // Função para manipular a barra lateral
+  function handleSidebar() {
+    var sidebarLogos = document.querySelectorAll('.sidebar-logo');
+
+    for (var i = 0; i < sidebarLogos.length; i++) {
+      var sidebarLogo = sidebarLogos[i];
+
+      if (sidebarLogo.dataset.page === currentPage) {
+        sidebarLogo.classList.add('active');
+      } else {
+        sidebarLogo.classList.remove('active');
+      }
+    }
+  }
+
+  // Chamar a função após definir a variável currentPage
+  handleSidebar();
+</script>
 
 
 

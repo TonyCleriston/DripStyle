@@ -47,9 +47,11 @@ class FormGerenciamentoRoupas(FlaskForm):
 
 class VendaForm(FlaskForm):
     roupa_venda = StringField('Produtos: ')
+    email_cliente = StringField('Email')
+    telefone_cliente = StringField('Telefone')
     roupa_vendida = StringField()
     qtd_estoque_venda = StringField('Quantidade: ', validators=[DataRequired(), length(1,1000)])
-    valor_total = StringField('Valor Total da Venda:', validators=[length(1,1000)])
+    valor_total = StringField('Valor Total da Venda: R$0', validators=[length(1,1000)])
     valor_unitario = StringField()
     nome_cliente = StringField('Nome do Cliente', validators=[length(1,70)])
     cpf = StringField('CPF', validators=[length(1,11)])

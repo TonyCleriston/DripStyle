@@ -93,7 +93,7 @@ all: unset;
     padding: 12px;
     width: 100%;
   }
-  input[type="submit"] {
+  input[type="submit"],[type="button"] {
     background-color: #333333;
     border: none;
     border-radius: 5px;
@@ -104,6 +104,355 @@ all: unset;
     margin-top: 20px;
     width: 100%;
   }
+  input[type=checkbox] {
+         position: relative;
+	       cursor: pointer;
+	       margin-right: 20px;
+    }
+    input[type=checkbox]:before {
+         content: "";
+         display: block;
+         position: absolute;
+         width: 20px;
+         height: 20px;
+          border: 1px solid #000;
+
+         top: 0;
+         left: 0;
+         background-color:#fff;
+}
+.categoria-div {
+            width: 100%;
+            height: 50px;
+
+
+            border-radius:10px;
+        }
+     .cinza{
+     background-color:#DDD;
+     }
+     .branco{
+     background-color:white;
+     }
+     .slider {
+  position: relative;
+  height: 10px;
+  width: 200px;
+  background-color: #ccc;
+}
+
+.slider-bar {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 4px;
+  width: 100%;
+  background-color: #555;
+}
+.gray-background {
+    background-color: #363636;
+  }
+   .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+    .page-number{
+    margin-left:10px;
+    font-weight:bold;
+    margin-right:10px;
+    }
+div.omrs-input-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+  width: 20.4375rem;
+}
+
+/* Input*/
+.omrs-input-underlined > input,
+.omrs-input-filled > input {
+	border: none;
+	border-bottom: 0.125rem solid var(--omrs-color-ink-medium-contrast);
+	width: 100%;
+	height: 2rem;
+	font-size: 1.0625rem;
+	padding-left: 0.875rem;
+	line-height: 147.6%;
+	padding-top: 0.825rem;
+	padding-bottom: 0.5rem;
+}
+
+.omrs-input-underlined > input:focus,
+.omrs-input-filled > input:focus {
+	outline: none;
+}
+.balao {
+  visibility: hidden;
+  width: 400px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s, visibility 0s linear 0.3s;
+}
+.switch__container {
+  margin: 30px auto 0px auto;
+  width: 50vw;
+}
+
+.switch {
+  visibility: hidden;
+  position: absolute;
+  margin-left: -9999px;
+}
+
+.switch + label {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+}
+
+.switch--shadow + label {
+  padding: 2px;
+  width: 120px;
+  height: 60px;
+  background-color: #dddddd;
+  border-radius: 60px;
+}
+.switch--shadow + label:before,
+.switch--shadow + label:after {
+  display: block;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  bottom: 1px;
+  content: "";
+}
+.switch--shadow + label:before {
+  right: 1px;
+  background-color: #f1f1f1;
+  border-radius: 60px;
+  transition: background 0.4s;
+}
+.switch--shadow + label:after {
+  width: 62px;
+  background-color: #fff;
+  border-radius: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s;
+}
+.switch--shadow:checked + label:before {
+  background-color: #8ce196;
+}
+.switch--shadow:checked + label:after {
+  transform: translateX(60px);
+}
+
+/* Estilo Flat */
+.switch--flat + label {
+  padding: 2px;
+  width: 120px;
+  height: 60px;
+  background-color: #dddddd;
+  border-radius: 60px;
+  transition: background 0.4s;
+}
+.switch--flat + label:before,
+.switch--flat + label:after {
+  display: block;
+  position: absolute;
+  content: "";
+}
+.switch--flat + label:before {
+  top: 2px;
+  left: 2px;
+  bottom: 2px;
+  right: 2px;
+  background-color: #fff;
+  border-radius: 60px;
+  transition: background 0.4s;
+}
+.switch--flat + label:after {
+  top: 4px;
+  left: 4px;
+  bottom: 4px;
+  width: 56px;
+  background-color: #dddddd;
+  border-radius: 52px;
+  transition: margin 0.4s, background 0.4s;
+}
+.switch--flat:checked + label {
+  background-color: #8ce196;
+}
+.switch--flat:checked + label:after {
+  margin-left: 60px;
+  background-color: #8ce196;
+}
+
+/* Mostrando o balão de texto ao passar o mouse */
+.mouse:hover .balao {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
+}
+.omrs-input-underlined > .omrs-input-label,
+.omrs-input-filled > .omrs-input-label {
+	position: absolute;
+	top: 0.9375rem;
+	left: 0.875rem;
+	font-family:monospace;
+	line-height: 147.6%;
+	color: var(--omrs-color-ink-medium-contrast);
+	transition: top .2s;
+}
+
+.omrs-input-underlined > svg,
+.omrs-input-filled > svg {
+	position: absolute;
+	top: 0.9375rem;
+	right: 0.875rem;
+	fill: var(--omrs-color-ink-medium-contrast);
+}
+
+.omrs-input-underlined > .omrs-input-helper,
+.omrs-input-filled > .omrs-input-helper {
+	font-size: 0.9375rem;
+	color: var(--omrs-color-ink-medium-contrast);
+	letter-spacing: 0.0275rem;
+	margin: 0.125rem 0.875rem;
+}
+
+.omrs-input-underlined > input:hover,
+.omrs-input-filled > input:hover {
+	background: var(--omrs-color-interaction-minus-two);
+	border-color: var(--omrs-color-ink-high-contrast);
+}
+
+.omrs-input-underlined > input:focus + .omrs-input-label,
+.omrs-input-underlined > input:valid + .omrs-input-label,
+.omrs-input-filled > input:focus + .omrs-input-label,
+.omrs-input-filled > input:valid + .omrs-input-label {
+	top: -7px;
+	font-size: 1rem;
+
+	margin-bottom: 45px;;
+}
+
+.omrs-input-underlined:not(.omrs-input-danger) > input:focus + .omrs-input-label,
+.omrs-input-filled:not(.omrs-input-danger) > input:focus + .omrs-input-label {
+	color: var(--omrs-color-interaction);
+
+}
+
+.omrs-input-underlined:not(.omrs-input-danger) > input:focus,
+.omrs-input-filled:not(.omrs-input-danger) > input:focus {
+	border-color: var(--omrs-color-interaction);
+}
+
+.omrs-input-underlined:not(.omrs-input-danger) > input:focus ~ svg,
+.omrs-input-filled:not(.omrs-input-danger) > input:focus ~ svg {
+	fill: var(--omrs-color-ink-high-contrast);
+}
+
+/** DISABLED **/
+
+.omrs-input-underlined > input:disabled {
+	background: var(--omrs-color-bg-low-contrast);
+	cursor: not-allowed;
+}
+
+.omrs-input-underlined > input:disabled + .omrs-input-label,
+.omrs-input-underlined > input:disabled ~ .omrs-input-helper{
+	color: var(--omrs-color-ink-low-contrast);
+}
+
+.omrs-input-underlined > input:disabled ~ svg {
+	fill: var(--omrs-color-ink-low-contrast);
+}
+ .pagination button {
+  background-color: #f2f2f2;
+font-weight:bold;
+  color: #666;
+  width:60px;
+  padding: 8px 16px;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination button:hover {
+  background-color: #ddd;
+}
+
+.pagination .active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.pagination button.prev,
+.pagination button.next {
+  margin: 0 4px;
+}
+
+.pagination button:first-child,
+.pagination button:last-child {
+  margin: 0;
+}
+.slider-circle {
+  position: absolute;
+  top: -35%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 2px solid #555;
+  cursor: grab;
+}
+
+.min-circle {
+  left: 0;
+  transform: translateX(-50%);
+}
+
+.max-circle {
+  right: 0;
+  transform: translateX(50%);
+}
+input[type=checkbox]:checked:before {
+         content: "";
+         display: block;
+         position: absolute;
+         width: 20px;
+         height: 20px;
+         top: 0;
+         left: 0;
+         background-color:#1E80EF;
+}
+    input[type=checkbox]:checked:after {
+         content: "";
+         display: block;
+         width: 5px;
+         height: 10px;
+         border: solid white;
+         border-width: 0 2px 2px 0;
+         -webkit-transform: rotate(45deg);
+         -ms-transform: rotate(45deg);
+         transform: rotate(45deg);
+         position: absolute;
+         top: 2px;
+         left: 6px;
+}
   button{
     background-color: #333333;
     border: none;
@@ -333,23 +682,35 @@ footer a:hover {
   padding: 10px;
   margin-bottom: 10px;
 }
-
 .sidebar {
   background: rgb(0 0 0 / 80%);
   width: 70px;
-  height: 100%;
+  height: 96vh;
+  margin-bottom: 25px;
+  overflow-y: scroll; /* Permite a rolagem vertical */
   position: fixed;
-  overflow: hidden;
   top: 0;
   left: 0;
   color: #fff;
   transition: width 0.3s;
+  scrollbar-width: thin; /* Largura da barra de rolagem (pode ajustar conforme necessário) */
+  scrollbar-color: transparent transparent; /* Cor da barra de rolagem (transparente para ocultar) */
+}
+
+/* Estilos personalizados para ocultar a barra de rolagem */
+.sidebar::-webkit-scrollbar {
+  width: 0em; /* Largura da barra de rolagem (pode ajustar conforme necessário) */
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Cor do polegar da barra de rolagem (transparente para ocultar) */
 }
 .sidebar-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
+
 }
 .sidebar.active {
   width: 304px;
@@ -372,6 +733,7 @@ all: unset;
   display: flex;
   flex-direction: column;
   align-items: center;
+
 }
 
 .bar {
@@ -412,6 +774,7 @@ all: unset;
   .sidebar {
     width: 100%;
     height: auto;
+
     position: relative;
     padding: 20px;
   }
@@ -429,6 +792,7 @@ all: unset;
  display: flex;
 padding-left:5px;
 height:62px;
+
 border-radius: 0 55px 55px 0;
 width:304px;
 
