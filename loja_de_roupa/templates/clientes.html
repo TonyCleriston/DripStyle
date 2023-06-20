@@ -1,0 +1,276 @@
+{% extends 'base.html' %} {% block body %}
+<script src="https://kit.fontawesome.com/fdbf7dbd59.js" crossorigin="anonymous"></script>
+
+<script>
+	var currentPage = 'pagina8';
+
+	// Função para manipular a barra lateral
+	function handleSidebar() {
+	  var sidebarLogos = document.querySelectorAll('.sidebar-logo');
+
+	  for (var i = 0; i < sidebarLogos.length; i++) {
+	    var sidebarLogo = sidebarLogos[i];
+
+	    if (sidebarLogo.dataset.page === currentPage) {
+	      sidebarLogo.classList.add('active');
+	    } else {
+	      sidebarLogo.classList.remove('active');
+	    }
+	  }
+	}
+
+
+	// Chamar a função após definir a variável currentPage
+	handleSidebar();
+</script>
+<style>
+	body {
+	  font-family: Arial, sans-serif;
+	  margin: 0;
+	  padding: 0;
+	}
+
+	.page-wrapper {
+	  padding: 100px;
+	  padding-top: 10px;
+	}
+
+	.header {
+	  background-color: #fff;
+	  color: #000;
+	  padding: 10px;
+	  padding-right:80px;
+	  padding-left:80px;
+	  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.row {
+	  display: flex;
+	  align-items: center;
+	  justify-content: space-between;
+	  margin-bottom: 10px;
+	}
+
+	.title {
+	  font-size: 24px;
+	border-bottom: 2px solid #ccc;
+	}
+
+	.filters {
+	  display: flex;
+	  align-items: center;
+	}
+
+	select {
+	  margin-right: 5px;
+	}
+
+	.search-bar {
+	  display: flex;
+	  align-items: center;
+	}
+
+	input[type="text"] {
+	  padding: 5px;
+	  margin-right: 5px;
+	}
+
+	button {
+	  padding: 5px 10px;
+	  background-color: #333;
+	  color: #fff;
+	  border: none;
+	  cursor: pointer;
+	}
+
+	.excel-button {
+	  border: 1px solid #333;
+	}
+
+	.content table {
+	  width: 100%;
+	  border-collapse: collapse;
+	  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.content th,
+	.content td {
+	  padding: 10px;
+	  border: 1px solid #ddd;
+	}
+
+	.content th {
+	  background-color: #f5f5f5;
+	  font-weight: bold;
+	}
+
+	.content td:first-child {
+	  text-align: center;
+	}
+
+	.content td:last-child {
+	  text-align: center;
+	}
+
+	/* Estilos para ícones */
+	i.fas {
+	  font-family: "Font Awesome 5 Free";
+	}
+
+	.fa-search::before {
+	  content: "\f002";
+	}
+
+	.fa-bars::before {
+	  content: "\f0c9";
+	}
+	tr {
+	font-size: 21px;
+	}
+</style>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+<div class="page-wrapper">
+	<div class="header">
+		<div class="row">
+			<div class="title">
+				Lista de Clientes
+			</div>
+		</div>
+		<div class="row">
+			<div class="filters">
+				<select style="width:80px;">
+					<option>8</option>
+					<option>1</option>
+					<option>2</option>
+				</select>
+				<span style="width:300px;">resultados por página</span>
+			</div>
+
+			<div class="search-bar">
+				<button style="background-color:white;color:black; margin:0;border-left: 3px solid black;border-radius:0px;"><i class="fas fa-search"></i> Pesquisar</button>
+				<input type="text" placeholder="" />
+
+				<button style="background-color:green;margin:0;">Excel</button>
+			</div>
+		</div>
+	</div>
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+	<div class="content">
+		<table>
+			<thead>
+				<tr style="color:black;">
+					<th>ID</th>
+					<th>Nome</th>
+					<th>Categoria Mais Comprada</th>
+					<th>Recorrência</th>
+					<th>Email</th>
+					<th>Telefone</th>
+					<th>Detalhes</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>1</td>
+					<td>João da Silva</td>
+					<td>Camisa</td>
+					<td>1 mês</td>
+					<td>joaodasilva@gmail.com</td>
+					<td>(75) 95001-2345</td>
+					<td><i class="fas fa-bars black-icon"></i></td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td>Maria Souza</td>
+					<td>Moletom</td>
+					<td>Primeira Compra</td>
+					<td>mariasouza@gmail.com</td>
+					<td>(75) 96567-8910</td>
+					<td><i class="fas fa-bars black-icon"></i></td>
+				</tr>
+				<tr>
+					<td>3</td>
+					<td>Pedro Santos</td>
+					<td>Camisa</td>
+					<td>3 mês</td>
+					<td>pedrosantos@gmail.com</td>
+					<td>(75) 93234-5678</td>
+					<td><i class="fas fa-bars black-icon"></i></td>
+				</tr>
+				<tr>
+					<td>4</td>
+					<td>Ana Oliveira</td>
+					<td>Short</td>
+					<td>2 mês</td>
+					<td>anaoliveira@gmail.com</td>
+					<td>(75) 92789-0123</td>
+					<td><i class="fas fa-bars black-icon"></i></td>
+				</tr>
+				<tr>
+					<td>5</td>
+					<td>Lucas Rodrigues</td>
+					<td>Short</td>
+					<td>6 mês</td>
+					<td>lucasrodrigues@gmail.com</td>
+					<td>(75) 90345-6789</td>
+					<td><i class="fas fa-bars black-icon"></i></td>
+				</tr>
+				<tr>
+					<td>6</td>
+					<td>Juliana Ferreira</td>
+					<td>Camisa</td>
+					<td>Primeira Compra</td>
+					<td>julianaferreira@gmail.com</td>
+					<td>(75) 90901-2345</td>
+					<td><i class="fas fa-bars black-icon"></i></td>
+				</tr>
+				<tr>
+					<td>7</td>
+					<td>André Almeida</td>
+					<td>Relogio</td>
+					<td>1 mês</td>
+					<td>andrealmeida@gmail.com</td>
+					<td>(75) 90678-9012</td>
+					<td><i class="fas fa-bars black-icon"></i></td>
+				</tr>
+				<tr>
+					<td>8</td>
+					<td>Fernanda Costa</td>
+					<td>Calça</td>
+					<td>3 mês</td>
+					<td>fernandacosta@gmail.com</td>
+					<td>(75) 90123-4567</td>
+					<td><i class="fas fa-bars black-icon"></i></td>
+				</tr>
+				<tr>
+					<td>9</td>
+					<td>Rafael Lima</td>
+					<td>Camiseta</td>
+					<td>2 mês</td>
+					<td>rafaellima@gmail.com</td>
+					<td>(75) 90890-1234</td>
+					<td><i class="fas fa-bars black-icon"></i></td>
+				</tr>
+				<tr>
+					<td>10</td>
+					<td>Camila Pereira</td>
+					<td>Moletom</td>
+					<td>4 mês</td>
+					<td>camilapereira@gmail.com</td>
+					<td>(75) 94456-7890</td>
+					<td><i class="fas fa-bars black-icon"></i></td>
+				</tr>
+				<tr>
+					<td>11</td>
+					<td>Gabriel Gomes</td>
+					<td>Calça</td>
+					<td>5 mês</td>
+					<td>gabrielgomes@gmail.com</td>
+					<td>(75) 91456-7890</td>
+					<td><i class="fas fa-bars black-icon"></i></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+{% endblock %}

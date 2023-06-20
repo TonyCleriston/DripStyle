@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  var currentPage = 'pagina7';
+
+  // Função para manipular a barra lateral
+  function handleSidebar() {
+    var sidebarLogos = document.querySelectorAll('.sidebar-logo');
+
+    for (var i = 0; i < sidebarLogos.length; i++) {
+      var sidebarLogo = sidebarLogos[i];
+
+      if (sidebarLogo.dataset.page === currentPage) {
+        sidebarLogo.classList.add('active');
+      } else {
+        sidebarLogo.classList.remove('active');
+      }
+    }
+  }
+
+
+  // Chamar a função após definir a variável currentPage
+  handleSidebar();
+</script>
+
+<style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .report-page {
+      text-align: center;
+      padding: 20px;
+      margin:15px;
+      background-color: #ffffff; /* Cor de fundo branco */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .chart-container {
+      width: 95vw;
+      margin-top: 20px;
+      display:flex;
+justify-content: center;
+padding:60px;
+padding-top:10px;
+    }
+  </style>
+ <script>
+    // Código JavaScript aqui
+    // Certifique-se de incluir o Chart.js antes de executar este código
+
+   document.addEventListener("DOMContentLoaded", function() {
+  var ctx = document.getElementById('bar-chart').getContext('2d');
+  var barChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Isabella Santos', 'Guilherme Guiven', 'Hilton Lima', 'Daniel Barros'],
+      datasets: [{
+        label: 'Vendas',
+        data: [8000, 6500, 9000, 3500],
+        backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(255, 206, 86, 0.2)'],
+        borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)', 'rgba(75, 192, 192, 1)', 'rgba(255, 206, 86, 1)'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          stepSize: 1000,
+          ticks: {
+            callback: function(value, index, values) {
+              return 'R$' + value.toLocaleString('pt-BR');
+            },
+            font: {
+              size: 18 // Tamanho da fonte para os números
+            }
+          },
+          title: {
+            display: true,
+            text: 'Vendas',
+            font: {
+              size: 16 // Tamanho da fonte para a palavra "Vendas"
+            }
+          }
+        },
+        x: {
+          ticks: {
+            font: {
+              size: 17 // Tamanho da fonte para os nomes dos funcionários
+            }
+          }
+        }
+      }
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var ctx = document.getElementById('pie-chart').getContext('2d');
+  var pieChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['Camisa', 'Moletom', 'Calça', 'Relógio', 'Short'],
+      datasets: [{
+        label: 'Vendas por Categoria',
+        data: [120, 80, 60, 45, 95],
+        backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(153, 102, 255, 0.2)'],
+        borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)', 'rgba(75, 192, 192, 1)', 'rgba(255, 206, 86, 1)', 'rgba(153, 102, 255, 1)'],
+        borderWidth: 1
+      }]
+    },
+   options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              size: 20 // Tamanho da fonte das categorias
+            }
+          }
+        }
+      }
+    }
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+  var ctx = document.getElementById('horizontal-bar-chart').getContext('2d');
+  var horizontalBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Whatzap - Novidade', 'Email', 'Whatzap - Mínimo Atingido', 'Não retornaram'],
+      datasets: [{
+        label: 'Recorrência dos Clientes',
+        data: [90, 30, 65, 10],
+        backgroundColor: ['rgba(54, 162, 235, 0.8)', 'rgba(255, 99, 132, 0.8)', 'rgba(75, 192, 192, 0.8)', 'rgba(255, 206, 86, 0.8)'],
+        borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)', 'rgba(75, 192, 192, 1)', 'rgba(255, 206, 86, 1)'],
+        borderWidth: 1
+      }]
+    },
+   options: {
+      indexAxis: 'y', // Exibir as barras na horizontal
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Recorrência Dos Clientes',
+          font: {
+            size: 18 // Tamanho da fonte do título
+          }
+        },
+        legend: {
+          display: false // Desativar a exibição da legenda
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 100, // Definir o valor máximo do eixo y
+          ticks: {
+            font: {
+              size: 20 // Tamanho da fonte das categorias no eixo y
+            }
+          }
+        },
+        x: {
+          beginAtZero: true,
+          max: 100, // Definir o valor máximo do eixo x
+          ticks: {
+            stepSize: 20,
+            font: {
+              size: 14 // Tamanho da fonte dos valores no eixo x
+            }
+          }
+        }
+      }
+    }
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+  var ctx = document.getElementById('doughnut-chart').getContext('2d');
+  var doughnutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: [
+        'Utilizaram CashBack',
+        'Próximos de Atingir o Mínimo',
+        'Pouco Saldo de CashBack',
+        'Resgataram Mais de uma Vez'
+      ],
+      datasets: [{
+        data: [50, 30, 20, 40],
+        backgroundColor: [
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(255, 99, 132, 0.8)',
+          'rgba(75, 192, 192, 0.8)',
+          'rgba(255, 206, 86, 0.8)'
+        ],
+        borderColor: 'rgba(255, 255, 255, 1)',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Cashback',
+          font: {
+            size: 18
+          }
+        },
+        legend: {
+          labels: {
+            font: {
+              size: 17
+            }
+          }
+        }
+      }
+    }
+  });
+});
+  </script>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+<body>
+  <div class="report-page">
+    <div style="display:flex;justify-content: space-evenly;margin-top:10px;">
+    <h1 style="margin-left:60px;">Relatório dos Funcionários</h1>
+    <h1 style="margin-left:100px;">Relatório das Categorias</h1>
+      </div>
+    <div class="chart-container">
+      <canvas id="bar-chart" style="max-width:50%;height:210px;"></canvas>
+      <canvas id="pie-chart" style="max-width:50%;height:210px;"></canvas>
+    </div>
+  </div>
+<div class="report-page">
+    <div style="display:flex;justify-content: space-evenly;margin-top:10px;">
+    <h1 style="margin-left:60px;">Relatório de Recorrencia</h1>
+    <h1 style="margin-left:100px;">Relatório do CashBack</h1>
+      </div>
+    <div class="chart-container" style="justify-content: flex-start;">
+      <canvas id="horizontal-bar-chart" style="max-width:50%;height:210px;"></canvas>
+        <div style="margin-left:217px;">
+      <canvas id="doughnut-chart"></canvas>
+            </div>
+    </div>
+  </div>
+</body>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+
+{% endblock %}

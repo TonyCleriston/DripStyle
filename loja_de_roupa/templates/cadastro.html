@@ -1,42 +1,29 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block body %}
+<form method="POST" style="margin-top:6%;">
+	<h2>Cadastro</h2>
 
-{% block body %}
-        <form method="POST" style="margin-top:6%;">
-          <h2>Cadastro</h2>
-
-            {{ form_cadastro_usuario.usuario.label(for="username") }}
-            {{ form_cadastro_usuario.usuario(id="username") }}
-
-            {{ form_cadastro_usuario.senha.label() }}
-            {{ form_cadastro_usuario.senha() }}
-
-            {{ form_cadastro_usuario.confirmacao.label() }}
-            {{ form_cadastro_usuario.confirmacao() }}
-
-            {{ form_cadastro_usuario.email.label(for="email") }}
-            {{ form_cadastro_usuario.email(id="email",type="email") }}
-
-            {{ form_cadastro_usuario.submit_cadastro_usuario() }}
-        </form>
+	{{ form_cadastro_usuario.usuario.label(for="username") }} {{ form_cadastro_usuario.usuario(id="username") }} {{ form_cadastro_usuario.senha.label() }} {{ form_cadastro_usuario.senha() }} {{ form_cadastro_usuario.confirmacao.label() }}
+	{{ form_cadastro_usuario.confirmacao() }} {{ form_cadastro_usuario.email.label(for="email") }} {{ form_cadastro_usuario.email(id="email",type="email") }} {{ form_cadastro_usuario.submit_cadastro_usuario() }}
+</form>
 <script>
-  var currentPage = 'pagina1';
+	var currentPage = 'pagina1';
 
-  // Função para manipular a barra lateral
-  function handleSidebar() {
-    var sidebarLogos = document.querySelectorAll('.sidebar-logo');
+	// Função para manipular a barra lateral
+	function handleSidebar() {
+	  var sidebarLogos = document.querySelectorAll('.sidebar-logo');
 
-    for (var i = 0; i < sidebarLogos.length; i++) {
-      var sidebarLogo = sidebarLogos[i];
+	  for (var i = 0; i < sidebarLogos.length; i++) {
+	    var sidebarLogo = sidebarLogos[i];
 
-      if (sidebarLogo.dataset.page === currentPage) {
-        sidebarLogo.classList.add('active');
-      } else {
-        sidebarLogo.classList.remove('active');
-      }
-    }
-  }
+	    if (sidebarLogo.dataset.page === currentPage) {
+	      sidebarLogo.classList.add('active');
+	    } else {
+	      sidebarLogo.classList.remove('active');
+	    }
+	  }
+	}
 
-  // Chamar a função após definir a variável currentPage
-  handleSidebar();
+	// Chamar a função após definir a variável currentPage
+	handleSidebar();
 </script>
 {% endblock %}

@@ -1,3 +1,4 @@
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
 <nav style="display: flex; justify-content: center; align-items: center;">
     <div class="logo" style="height:60px;flex: 1; display: flex; justify-content: center; align-items: center;">
          <img src="{{ url_for('static', filename='DripStyle.png') }}"style="margin-left:90px;max-height: 100%; max-width: 100%; transform: rotate(4deg);">
@@ -24,15 +25,12 @@
     </form>
   </div>
 </div>
+    <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
 
 
     <ul class="nav-links">
        {% if current_user %}
   {% if current_user.is_authenticated %}
-
-
-
-
   {% else %}
     <li><a href="{{ url_for('login') }}"></a></li>
   {% endif %}

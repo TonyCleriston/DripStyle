@@ -1,275 +1,248 @@
 <html lang="pt-BR">
-    <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>Loja de Roupa</title>
-</head>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+		<title>Loja de Roupa</title>
+	</head>
 
-    <body>
-
-         <script>
-
-
-
-        // Selecione todos os elementos .sidebar-logo
-var sidebarLogos = document.querySelectorAll('.sidebar-logo');
-var current_page = window.location.pathname;
-// Itere sobre os elementos .sidebar-logo
-for (var i = 0; i < sidebarLogos.length; i++) {
-  var sidebarLogo = sidebarLogos[i];
-
-  // Verifique se a classe .active deve ser adicionada ou removida
-  if (sidebarLogo.dataset.page === current_page) {
-    sidebarLogo.classList.add('active');
-  } else {
-    sidebarLogo.classList.remove('active');
-  }
-}
-
-    function toggleSidebar() {
-  const sidebar = document.querySelector('.sidebar');
-
-  sidebar.addEventListener('mouseenter', () => {
-    sidebar.classList.add('active');
-  });
-
-  sidebar.addEventListener('mouseleave', () => {
-    sidebar.classList.remove('active');
-  });
-}
-window.addEventListener('DOMContentLoaded', function() {
-  toggleSidebar();
-});
-</script>
-        {% include 'navbar.html' %}
-        <div class="container">
-            {% with mensagens = get_flashed_messages(with_categories=True) %}
-                {% if mensagens %}
-                    {% for categoria, mensagem in mensagens %}
-                        <div class="alert {{ categoria }}">
-                            {{ mensagem }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-        </div>
-     {% if current_user %}
-  {% if current_user.is_authenticated %}
-         <div class="sidebar" style="z-index:1;">
-             <div class="sidebar-header">
-    <div class="sidebar-toggle" style="display:block;" onclick="toggleSidebar()">
-       <div class="sidebar-logo" style="margin-top:0px;">
-        <img src="{{ url_for('static', filename='Logo.png') }}" style="weight:60px;height:60px;">
-        <a style="margin-left:55px; font-size:30px; margin-top:15px;" class="sidebar-word">Menu</a>
-      </div>
-          <a href="{{ url_for('cadastro') }}" style="width:304px;">
-     <div style="margin-top: 9px;" class="sidebar-logo {% if current_page == '/cadastro' %}active{% endif %}" data-page="pagina1" style="margin-top:0px;">
-
-    <img src="{{ url_for('static', filename='adicionar-usuario.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
-    <span class="sidebar-word">Cadastro de Usuário</span>
-
-        </div>
-                </a>
-   <a href="{{ url_for('roupas') }}" style="width:304px;" >
-         <div  class="sidebar-logo {% if current_page == '/roupas' %}active{% endif %}" data-page="pagina2">
-
-        <img src="{{ url_for('static', filename='roupas-remove.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
-        <span class="sidebar-word">Roupas</span>
-        </div>
-        </a>
- <a href="{{ url_for('vendas') }}" style="width:304px;">
-         <div class="sidebar-logo {% if current_page == '/vendas' %}active{% endif %}" data-page="pagina3">
-
-        <img src="{{ url_for('static', filename='carrinho.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
-        <span class="sidebar-word">Vendas</span>
-        </div>
-        </a>
-  <a href="{{ url_for('historico') }}" style="width:304px;">
-       <div class="sidebar-logo {% if current_page == '/historico' %}active{% endif %}" data-page="pagina4">
-
-        <img src="{{ url_for('static', filename='historico.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
-        <span class="sidebar-word">Histórico de Vendas</span>
-        </div>
-        </a>
-         <a href="{{ url_for('cashback') }}" style="width:304px;">
-       <div class="sidebar-logo {% if current_page == '/cashback' %}active{% endif %}" data-page="pagina5">
-
-        <img src="{{ url_for('static', filename='cofrinho.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
-        <span class="sidebar-word">CashBack</span>
-        </div>
-        </a>
-        <a href="{{ url_for('cashback') }}" style="width:304px;">
-       <div class="sidebar-logo {% if current_page == '/cashback' %}active{% endif %}" data-page="">
-
-        <img src="{{ url_for('static', filename='cliente.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
-        <span class="sidebar-word">Clientes</span>
-        </div>
-        </a>
-        <a href="{{ url_for('cashback') }}" style="width:304px;">
-       <div class="sidebar-logo {% if current_page == '/cashback' %}active{% endif %}" data-page="">
-
-        <img src="{{ url_for('static', filename='botao-curtir.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
-        <span class="sidebar-word" style="font-size:15px;">Relacionamento com o Cliente</span>
-        </div>
-        </a>
-        <a href="{{ url_for('cashback') }}" style="width:304px;">
-       <div class="sidebar-logo {% if current_page == '/cashback' %}active{% endif %}" data-page="">
-
-        <img src="{{ url_for('static', filename='pacotes.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
-        <span class="sidebar-word">Fornecedores</span>
-        </div>
-        </a>
-        <a href="{{ url_for('cashback') }}" style="width:304px;">
-       <div class="sidebar-logo {% if current_page == '/cashback' %}active{% endif %}" data-page="">
-
-        <img src="{{ url_for('static', filename='informacao-financeira.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
-        <span class="sidebar-word">Relatórios</span>
-        </div>
-        </a>
-        <a href="{{ url_for('cashback') }}" style="width:304px;">
-       <div class="sidebar-logo {% if current_page == '/cashback' %}active{% endif %}" data-page="">
-
-        <img src="{{ url_for('static', filename='suporte-online.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
-        <span class="sidebar-word">Suporte</span>
-        </div>
-        </a>
-        <hr size="1">
- <a onclick="return checkAccess();" href="{% if current_user.id == '001' and current_user.usuario == 'ADMINISTRADOR' %}{{ url_for('RemoverUsuario') }}{% else %}javascript:void(0);{% endif %}" style="width:304px;">
-        <div class="sidebar-logo {% if current_page != '/RemoverUsuario' %}active{% endif %}" data-page="pagina6">
-
-        <img src="{{ url_for('static', filename='remover-usuario.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;">
-        <span class="sidebar-word">Remover Usuários</span>
-         </div>
-        </a>
-    </div>
-                 </div>
-  </div>
-         {% endif %}
-{% endif %}
-
-        {% block body %}
-
-        {% endblock %}
-        <script>
-function checkAccess() {
-  if ("{{ current_user.id }}" !== "001" || "{{ current_user.usuario }}" !== "ADMINISTRADOR") {
-    alert("Acesso negado!");
-    return false; // Impede o redirecionamento para /RemoverUsuario
-  }
-  return true; // Permite o redirecionamento para /RemoverUsuario
-}
-
-</script>
-  <script>
-function FormLogin() {
-          var form = document.getElementById("form-container");
-          var btn = document.getElementById("btn-logout");
-         if (form.style.display === "none" || form.style.display === "") {
-    form.style.display = "flex";
-  } else {
-    form.style.display = "none";
-  }
-}
-  </script>
-
-        <script>
-        function toggleForm() {
-          var form = document.getElementById("add-roupa-form");
-          var btn = document.getElementById("add-roupa-btn");
-          if (form.style.display === "none") {
-            form.style.display = "block";
-            btn.innerHTML = "Fechar";
-          } else {
-            form.style.display = "none";
-            btn.innerHTML = "Adicionar Roupa";
-          }
-        }
-        function toggleFormRem() {
-          var form = document.getElementById("rem-roupa-form");
-          var btn = document.getElementById("rem-roupa-btn");
-          if (form.style.display === "none") {
-            form.style.display = "block";
-            btn.innerHTML = "Fechar";
-          } else {
-            form.style.display = "none";
-            btn.innerHTML = "Remover Roupa";
-          }
-        }
-        function toggleFormRemUsu() {
-          var form = document.getElementById("rem-usuario-form");
-          var btn = document.getElementById("rem-usuario-btn");
-          if (form.style.display === "none") {
-            form.style.display = "block";
-            btn.innerHTML = "Fechar";
-          } else {
-            form.style.display = "none";
-            btn.innerHTML = "Remover Usuário";
-          }
-        }
-        function toggleFormAddCat() {
-          var form = document.getElementById("add-categoria-form");
-          var btn = document.getElementById("add-categoria-btn");
-          if (form.style.display === "none") {
-            form.style.display = "block";
-            btn.innerHTML = "Fechar";
-          } else {
-            form.style.display = "none";
-            btn.innerHTML = "Gerenciar Categoria";
-          }
-        }
-
-        function toggleFormAddEst() {
-          var form = document.getElementById("add-estoque-form");
-          var btn = document.getElementById("add-estoque-btn");
-          if (form.style.display === "none") {
-            form.style.display = "block";
-            btn.innerHTML = "Fechar";
-          } else {
-            form.style.display = "none";
-            btn.innerHTML = "Gerenciar Estoque";
-          }
-        }
-
-
-var addRoupaBtn = document.getElementById("add-roupa-btn");
-var addRoupaModal = document.getElementById("add-roupa-modal");
-function toggleModal() {
-  addRoupaModal.style.display = (addRoupaModal.style.display == "none") ? "flex" : "none";
-  addRoupaModal.style.display = "flex";
-}
-addRoupaBtn.addEventListener("click", function() {
-  toggleModal();
-
- submitBtn.classList.remove('submit-editar-roupa');
- submitBtn.setAttribute('name', 'submit_adc_roupa');
-  submitBtn.setAttribute('value', 'Adicionar');
-
-});
-document.addEventListener('click', function(event) {
-  var modal = document.getElementById('add-roupa-modal');
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-});
-var delusuariobtn = document.getElementById("del-usuario-btn");
-var delusuariomodal = document.getElementById("del-usuario-modal");
-function toggleModal1() {
-  delusuariomodal.style.display = (delusuariomodal.style.display == "none") ? "flex" : "none";
-  delusuariomodal.style.display = "flex";
-}
-delusuariobtn.addEventListener("click", toggleModal1);
-document.addEventListener('click', function(event) {
-  var modal = document.getElementById('del-usuario-modal');
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-});
+	<body>
+		{% include 'navbar.html' %}
+		<div class="container">
+			{% with mensagens = get_flashed_messages(with_categories=True) %} {% if mensagens %} {% for categoria, mensagem in mensagens %}
+			<div class="alert {{ categoria }}">
+				{{ mensagem }}
+			</div>
+			{% endfor %} {% endif %} {% endwith %}
+		</div>
+		{% if current_user %} {% if current_user.is_authenticated %}
+		<div class="sidebar" style="z-index:1;">
+			<div class="sidebar-header">
+				<div class="sidebar-toggle" style="display:block;" onclick="toggleSidebar()">
+					<div class="sidebar-logo" style="margin-top:0px;">
+						<img src="{{ url_for('static', filename='Logo.png') }}" style="weight:60px;height:60px;" />
+						<a style="margin-left:55px; font-size:30px; margin-top:15px;" class="sidebar-word">Menu</a>
+					</div>
+					<a href="{{ url_for('cadastro') }}" style="width:304px;">
+						<div style="margin-top: 9px;" class="sidebar-logo {% if current_page == '/cadastro' %}active{% endif %}" data-page="pagina1" style="margin-top:0px;">
+							<img src="{{ url_for('static', filename='adicionar-usuario.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;" />
+							<span class="sidebar-word">Cadastro de Usuário</span>
+						</div>
+					</a>
+					<a href="{{ url_for('roupas') }}" style="width:304px;">
+						<div class="sidebar-logo {% if current_page == '/roupas' %}active{% endif %}" data-page="pagina2">
+							<img src="{{ url_for('static', filename='roupas-remove.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;" />
+							<span class="sidebar-word">Roupas</span>
+						</div>
+					</a>
+					<a href="{{ url_for('vendas') }}" style="width:304px;">
+						<div class="sidebar-logo {% if current_page == '/vendas' %}active{% endif %}" data-page="pagina3">
+							<img src="{{ url_for('static', filename='carrinho.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;" />
+							<span class="sidebar-word">Vendas</span>
+						</div>
+					</a>
+					<a href="{{ url_for('historico') }}" style="width:304px;">
+						<div class="sidebar-logo {% if current_page == '/historico' %}active{% endif %}" data-page="pagina4">
+							<img src="{{ url_for('static', filename='historico.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;" />
+							<span class="sidebar-word">Histórico de Vendas</span>
+						</div>
+					</a>
+					<a href="{{ url_for('cashback') }}" style="width:304px;">
+						<div class="sidebar-logo {% if current_page == '/cashback' %}active{% endif %}" data-page="pagina5">
+							<img src="{{ url_for('static', filename='cofrinho.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;" />
+							<span class="sidebar-word">CashBack</span>
+						</div>
+					</a>
+					<a href="{{ url_for('clientes') }}" style="width:304px;">
+						<div class="sidebar-logo {% if current_page == '/clientes' %}active{% endif %}" data-page="pagina8">
+							<img src="{{ url_for('static', filename='cliente.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;" />
+							<span class="sidebar-word">Clientes</span>
+						</div>
+					</a>
+					<a href="{{ url_for('cashback') }}" style="width:304px;">
+						<div class="sidebar-logo {% if current_page == '/cashback' %}active{% endif %}" data-page="">
+							<img src="{{ url_for('static', filename='botao-curtir.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;" />
+							<span class="sidebar-word" style="font-size:15px;">Relacionamento com o Cliente</span>
+						</div>
+					</a>
+					<a href="{{ url_for('cashback') }}" style="width:304px;">
+						<div class="sidebar-logo {% if current_page == '/cashback' %}active{% endif %}" data-page="">
+							<img src="{{ url_for('static', filename='pacotes.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;" />
+							<span class="sidebar-word">Fornecedores</span>
+						</div>
+					</a>
+					<a href="{{ url_for('relatorios') }}" style="width:304px;">
+						<div class="sidebar-logo {% if current_page == '/relatorios' %}active{% endif %}" data-page="pagina7">
+							<img src="{{ url_for('static', filename='informacao-financeira.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;" />
+							<span class="sidebar-word">Relatórios</span>
+						</div>
+					</a>
+					<a href="{{ url_for('cashback') }}" style="width:304px;">
+						<div class="sidebar-logo {% if current_page == '/cashback' %}active{% endif %}" data-page="">
+							<img src="{{ url_for('static', filename='suporte-online.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;" />
+							<span class="sidebar-word">Suporte</span>
+						</div>
+					</a>
+					<hr size="1" />
+					<a onclick="return checkAccess();" href="{% if current_user.id == '001' and current_user.usuario == 'ADMINISTRADOR' %}{{ url_for('RemoverUsuario') }}{% else %}javascript:void(0);{% endif %}" style="width:304px;">
+						<div class="sidebar-logo {% if current_page != '/RemoverUsuario' %}active{% endif %}" data-page="pagina6">
+							<img src="{{ url_for('static', filename='remover-usuario.png') }}" style="width:30px;height:30px;margin-left:15px;margin-top:17px;" />
+							<span class="sidebar-word">Remover Usuários</span>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		{% endif %} {% endif %} {% block body %} {% endblock %}
+		<script>
 
 
 
-</script>
-    </body>
-{% include 'footer.html' %}
+			        // Selecione todos os elementos .sidebar-logo
+			var sidebarLogos = document.querySelectorAll('.sidebar-logo');
+			var current_page = window.location.pathname;
+			// Itere sobre os elementos .sidebar-logo
+			for (var i = 0; i < sidebarLogos.length; i++) {
+			  var sidebarLogo = sidebarLogos[i];
+
+			  // Verifique se a classe .active deve ser adicionada ou removida
+			  if (sidebarLogo.dataset.page === current_page) {
+			    sidebarLogo.classList.add('active');
+			  } else {
+			    sidebarLogo.classList.remove('active');
+			  }
+			}
+
+			    function toggleSidebar() {
+			  const sidebar = document.querySelector('.sidebar');
+
+			  sidebar.addEventListener('mouseenter', () => {
+			    sidebar.classList.add('active');
+			  });
+
+			  sidebar.addEventListener('mouseleave', () => {
+			    sidebar.classList.remove('active');
+			  });
+			}
+			window.addEventListener('DOMContentLoaded', function() {
+			  toggleSidebar();
+			});
+		</script>
+		<script>
+			function checkAccess() {
+			  if ("{{ current_user.id }}" !== "001" || "{{ current_user.usuario }}" !== "ADMINISTRADOR") {
+			    alert("Acesso negado!");
+			    return false; // Impede o redirecionamento para /RemoverUsuario
+			  }
+			  return true; // Permite o redirecionamento para /RemoverUsuario
+			}
+		</script>
+		<script>
+			function FormLogin() {
+			          var form = document.getElementById("form-container");
+			          var btn = document.getElementById("btn-logout");
+			         if (form.style.display === "none" || form.style.display === "") {
+			    form.style.display = "flex";
+			  } else {
+			    form.style.display = "none";
+			  }
+			}
+		</script>
+
+		<script>
+			        function toggleForm() {
+			          var form = document.getElementById("add-roupa-form");
+			          var btn = document.getElementById("add-roupa-btn");
+			          if (form.style.display === "none") {
+			            form.style.display = "block";
+			            btn.innerHTML = "Fechar";
+			          } else {
+			            form.style.display = "none";
+			            btn.innerHTML = "Adicionar Roupa";
+			          }
+			        }
+			        function toggleFormRem() {
+			          var form = document.getElementById("rem-roupa-form");
+			          var btn = document.getElementById("rem-roupa-btn");
+			          if (form.style.display === "none") {
+			            form.style.display = "block";
+			            btn.innerHTML = "Fechar";
+			          } else {
+			            form.style.display = "none";
+			            btn.innerHTML = "Remover Roupa";
+			          }
+			        }
+			        function toggleFormRemUsu() {
+			          var form = document.getElementById("rem-usuario-form");
+			          var btn = document.getElementById("rem-usuario-btn");
+			          if (form.style.display === "none") {
+			            form.style.display = "block";
+			            btn.innerHTML = "Fechar";
+			          } else {
+			            form.style.display = "none";
+			            btn.innerHTML = "Remover Usuário";
+			          }
+			        }
+			        function toggleFormAddCat() {
+			          var form = document.getElementById("add-categoria-form");
+			          var btn = document.getElementById("add-categoria-btn");
+			          if (form.style.display === "none") {
+			            form.style.display = "block";
+			            btn.innerHTML = "Fechar";
+			          } else {
+			            form.style.display = "none";
+			            btn.innerHTML = "Gerenciar Categoria";
+			          }
+			        }
+
+			        function toggleFormAddEst() {
+			          var form = document.getElementById("add-estoque-form");
+			          var btn = document.getElementById("add-estoque-btn");
+			          if (form.style.display === "none") {
+			            form.style.display = "block";
+			            btn.innerHTML = "Fechar";
+			          } else {
+			            form.style.display = "none";
+			            btn.innerHTML = "Gerenciar Estoque";
+			          }
+			        }
+
+
+			var addRoupaBtn = document.getElementById("add-roupa-btn");
+			var addRoupaModal = document.getElementById("add-roupa-modal");
+			function toggleModal() {
+			  addRoupaModal.style.display = (addRoupaModal.style.display == "none") ? "flex" : "none";
+			  addRoupaModal.style.display = "flex";
+			}
+			addRoupaBtn.addEventListener("click", function() {
+			  toggleModal();
+
+			 submitBtn.classList.remove('submit-editar-roupa');
+			 submitBtn.setAttribute('name', 'submit_adc_roupa');
+			  submitBtn.setAttribute('value', 'Adicionar');
+
+			});
+			document.addEventListener('click', function(event) {
+			  var modal = document.getElementById('add-roupa-modal');
+			  if (event.target == modal) {
+			    modal.style.display = "none";
+			  }
+			});
+			var delusuariobtn = document.getElementById("del-usuario-btn");
+			var delusuariomodal = document.getElementById("del-usuario-modal");
+			function toggleModal1() {
+			  delusuariomodal.style.display = (delusuariomodal.style.display == "none") ? "flex" : "none";
+			  delusuariomodal.style.display = "flex";
+			}
+			delusuariobtn.addEventListener("click", toggleModal1);
+			document.addEventListener('click', function(event) {
+			  var modal = document.getElementById('del-usuario-modal');
+			  if (event.target == modal) {
+			    modal.style.display = "none";
+			  }
+			});
+		</script>
+	</body>
+	{% include 'footer.html' %}
 </html>

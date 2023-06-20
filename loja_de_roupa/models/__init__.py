@@ -28,7 +28,8 @@ class Categoria(database.Model):
 class Cliente(database.Model):
     id_cliente = database.Column(database.Integer, primary_key=True)
     nome_cliente = database.Column(database.String, nullable=False)
-    cpf = database.Column(database.String, nullable=False, unique=True)
+    cpf = database.Column(database.String, nullable=False)
+    telefone = database.Column(database.String, nullable=False)
     cashback = database.Column(database.Float)
     data_validade_cashback = database.Column(database.String)
 class Promocao(database.Model):
@@ -42,11 +43,6 @@ class Cashback(database.Model):
 
 class Vendas(database.Model):
     id_venda = database.Column(database.Integer, primary_key=True)
-    codigo_pedido = database.Column(database.Integer)
-    roupas_fk = database.Column(database.String, nullable=False)
-    valor_unitario = database.Column(database.Float)
-    valor_total = database.Column(database.Float)
-    qtd = database.Column(database.Integer)
     nome_cliente = database.Column(database.String, nullable=False)
     total_da_venda = database.Column(database.Float, nullable=False)
     tipo_pagamento_fk = database.Column(database.String)
@@ -54,6 +50,14 @@ class Vendas(database.Model):
     fuso_horario = pytz.timezone('America/Sao_Paulo')
     data_hora_atual = datetime.datetime.now(fuso_horario)
     data_da_venda = database.Column(database.DateTime, default=data_hora_atual)
+
+class Itens_Venda(database.Model):
+    id_itens_venda = database.Column(database.Integer, primary_key=True)
+    codigo_venda = database.Column(database.Integer)
+    roupas_fk = database.Column(database.String, nullable=False)
+    valor_unitario = database.Column(database.Float)
+    subtotal = database.Column(database.Float)
+    qtd = database.Column(database.Integer)
 
 
 

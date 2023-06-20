@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, length, Email,equal_to
 from wtforms.widgets import TextArea
 
@@ -37,6 +37,7 @@ class FormGerenciamentoRoupas(FlaskForm):
     nome_estoque_del = StringField('Nome da Roupa', validators=[length(1,70)])
     qtd_estoque_add = StringField('Quantidade Adicionada',validators=[length(1,10)])
     qtd_estoque_del = StringField('Quantidade Removida',validators=[length(1,10)])
+    enviar_novidades = BooleanField('Enviar Novidades', render_kw={'class': 'checkbox-container','style': 'font-size:21px;font-weight:bold;'})
     submit_add_categoria = SubmitField('Adicionar')
     submit_del_categoria = SubmitField('Remover')
     submit_add_estoque = SubmitField('Adicionar')
@@ -46,6 +47,7 @@ class FormGerenciamentoRoupas(FlaskForm):
     submit_del_usuario = SubmitField('Remover')
 
 class VendaForm(FlaskForm):
+    cashback_checkbox = BooleanField('Usar CashBack')
     roupa_venda = StringField('Produtos: ')
     email_cliente = StringField('Email')
     telefone_cliente = StringField('Telefone')

@@ -1,14 +1,15 @@
-from flask import render_template, url_for, redirect, flash, request
+from flask import render_template, url_for, redirect, flash, request, jsonify
 from loja_de_roupa.forms import FormLogin, FormCadastroUsuario, FormGerenciamentoRoupas , VendaForm,FormRemUsu
 from loja_de_roupa import app, database
-from loja_de_roupa.models import Usuario, Roupas, Categoria, Promocao, Vendas, Cliente, Cashback
+from loja_de_roupa.models import Usuario, Roupas, Categoria, Promocao, Vendas, Cliente, Cashback, Itens_Venda
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 from flask_login import login_required , login_user , logout_user, current_user
 import requests
+import pywhatkit
 from twilio.rest import Client
 account_sid = 'AC4bf9cd5aca8f16160b0ee9c8a10a6be6'
-auth_token = '3745f5e66f7ab8f437adf2db1458ad06'
+auth_token = '8c0cad44b7fd609dead11fc7297b49f7'
 client = Client(account_sid, auth_token)
 
 @app.route('/excluir/<int:r_id>', methods=['GET','POST'])
@@ -124,13 +125,13 @@ def enviar_email():
     # Aqui você pode usar a biblioteca de envio de email de sua escolha, como o Mailgun
     # Neste exemplo, usaremos a biblioteca requests para enviar uma solicitação POST para a API do Mailgun
 
-    MAILGUN_API_KEY = '16ce98e653cdc2be15bb22db499f3fb5-6d1c649a-5edb3d37'
-    MAILGUN_DOMAIN = 'sandbox45c07b6feda14623893ad74d9bd70151.mailgun.org'
+    MAILGUN_API_KEY = '2d6a1a2162d2c8d2b604709f41c59205-af778b4b-e619083c'
+    MAILGUN_DOMAIN = 'sandbox532ae69924e6413c9848da9d5ec8c7c5.mailgun.org'
 
     url = f"https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages"
     auth = ("api", MAILGUN_API_KEY)
     data = {
-        "from": "tonysonic1227@gmail.com",
+        "from": "tony.junior@ba.senai.estudante.br",
         "to": email,
         "subject": "Nota fiscal da compra",
         "html": corpo
@@ -138,9 +139,23 @@ def enviar_email():
 
     response = requests.post(url, auth=auth, data=data)
     if response.status_code == 200:
+        print("Email enviado com sucesso!")
         return 'Email enviado com sucesso!'
     else:
-        return 'Erro ao enviar o email: ' + response.text, 500
+        print('Erro ao enviar o email:', response.text)
+        return 'Erro ao enviar o email', response.status_code
+
+@app.route("/relatorios",methods=['GET', 'POST'])
+@login_required
+def relatorios():
+
+    return render_template('relatorios.html')
+
+@app.route("/clientes",methods=['GET', 'POST'])
+@login_required
+def clientes():
+
+    return render_template('clientes.html')
 
 
 @app.route("/roupas",methods=['GET', 'POST'])
@@ -185,36 +200,21 @@ def roupas():
                         return redirect(url_for('roupas'))
 
 
-                    categoria_validado = gerenciamento.categoria.data.upper()
-                    tamanho_validado = gerenciamento.tamanho.data.upper()
-                    roupa = Roupas(nome_roupa=nome_roupa_adc_validado, categoria=categoria_validado,tamanho=tamanho_validado,estoque=gerenciamento.estoque.data,valor=valor_validado,min_estoque=min_estoque_validado,descricao=gerenciamento.descricao.data)
-                    database.session.add(roupa)
-                    database.session.commit()
-                    cliente = Cliente.query.first()  # Assuming you want to retrieve the first customer from the query
-                    nome_cliente = cliente.nome_cliente
-                    cashback = Cashback.query.first()
-                    valor = float(valor_validado)
-                    desconto = 0.15 * valor
-                    valor_com_desconto = valor - desconto
-                    texto_rasurado = ''.join([char + '̷' for char in f'R${valor:.2f} '])
-                    if cliente.cashback > cashback.min_cashback:
-                        mensagem = f'Oi, {nome_cliente}, tudo bem? 😊 Tenho uma ótima notícia par te dar. Sua cota de cashback foi atingida com sucesso e você tem R${cliente.cashback} para gastar em produtos na nossa loja, válidos até o dia {cliente.data_validade_cashback}. Aproveite e venha para a Dripstyle reinvindicar suas vantagens.'
-                        message = client.messages.create(
-                            from_='whatsapp:+14155238886',
-                            body=mensagem,
-                            to='whatsapp:+557599489435'
-                        )
-                        print(message.sid)
-                    mensagem = f'Oi, {nome_cliente}, tudo bem? Estávamos reparando em suas últimas compras em nossa loja e percebemos que podemos ter alguns produtos que possam te atrair. Segue uma lista com as nossas novidades escolhidas especialmente para você:\n- {gerenciamento.nome_roupa_adc.data.capitalize()}: {texto_rasurado}  | R${valor_com_desconto:.2f} (com desconto de 15%)\nTe aguardamos o quanto antes em nossa loja, somos muito gratos por tê-lo(a) como nosso cliente! 😊'
+                categoria_validado = gerenciamento.categoria.data.upper()
+                tamanho_validado = gerenciamento.tamanho.data.upper()
+                roupa = Roupas(nome_roupa=nome_roupa_adc_validado, categoria=categoria_validado,tamanho=tamanho_validado,estoque=gerenciamento.estoque.data,valor=valor_validado,min_estoque=min_estoque_validado,descricao=gerenciamento.descricao.data)
+                database.session.add(roupa)
+                database.session.commit()
+                clientes = Cliente.query.all()
+                print(request.form)
+                if request.form.get("enviar_novidades") == "y":
+                    for cliente in clientes:
+                        mensagem = f'Oi, {cliente.nome_cliente}, tudo bem? Estávamos reparando em suas últimas compras em nossa loja e percebemos que podemos ter alguns produtos que possam te atrair. Segue uma lista com as nossas novidades escolhidas especialmente para você:\n- {gerenciamento.nome_roupa_adc.data.capitalize()}: R${gerenciamento.valor.data}  | \nTe aguardamos o quanto antes em nossa loja, somos muito gratos por tê-lo(a) como nosso cliente! 😊'
+                        pywhatkit.sendwhats_image("+557591957920","C:\\Users\\tonys\\Downloads\\10cc61364c647819c56283fb377dba4f.jpg", mensagem)
 
-                    message = client.messages.create(
-                        from_='whatsapp:+14155238886',
-                        body=mensagem,
-                        to='whatsapp:+557599489435'
-                    )
-                    print(message.sid)
-                    flash(f'{gerenciamento.nome_roupa_adc.data} cadastrada com sucesso', 'alert-success')
-                    return redirect(url_for('roupas'))
+
+                flash(f'{gerenciamento.nome_roupa_adc.data} cadastrada com sucesso', 'alert-success')
+                return redirect(url_for('roupas'))
 
         if gerenciamento.submit_add_categoria.name in request.form:
             if not gerenciamento.validate_on_submit():
@@ -332,7 +332,7 @@ def roupas():
 
 
 @app.route("/cadastro", methods=['GET', 'POST'])
-
+@login_required
 def cadastro():
     form_cadastro_usuario = FormCadastroUsuario()
     if request.method == 'POST':
@@ -407,6 +407,64 @@ def RemoverUsuario():
                 flash(f'Erro ao deletar Usuário', 'alert-danger')
                 return redirect(url_for('RemoverUsuario'))
     return render_template('removerUsuario.html', form_rem_usu=form_rem_usu, usuario=usuario)
+@app.route("/atualizar_estoque", methods=['GET', 'POST'])
+def atualizar_estoque():
+    data = request.get_json()
+
+    vendas = data['venda']
+    print(current_user.usuario)
+
+    # Criar a venda no banco de dados
+    venda_db = Vendas(nome_cliente=data['nome_cliente'],
+                      # Supondo que você deseja pegar o nome do cliente da primeira venda
+                      total_da_venda=0.0,
+                      tipo_pagamento_fk=data['tipo_pagamento'],
+                      # Supondo que o tipo de pagamento é o mesmo para todas as vendas
+                      vendedor=current_user.usuario)
+    print(venda_db)
+    database.session.add(venda_db)
+    database.session.commit()
+
+    for venda in vendas:
+
+        nome = venda['nome']
+        quantidade = venda['quantidade']
+
+        # Atualizar o estoque no banco de dados
+        roupa_est = Roupas.query.filter_by(nome_roupa=nome).first()
+        if roupa_est is None:
+            return jsonify({'success': False, 'message': 'Roupa não encontrada'})
+        if roupa_est.estoque < quantidade:
+            return jsonify({'success': False, 'message': 'Quantidade maior que o estoque'})
+
+        roupa_est.estoque -= quantidade
+        print(venda)
+
+        # Calcular o total da venda
+        subtotal = venda['quantidade'] * venda['valorUnitario']
+        venda_db.total_da_venda += subtotal
+        print(venda_db.total_da_venda)
+        print(subtotal)
+        print(venda_db.id_venda)
+        print(venda['nome'])
+        print(venda['valorUnitario'])
+        print(venda['quantidade'])
+
+        # Criar os itens de venda relacionados à venda
+        item_venda = Itens_Venda(codigo_venda=venda_db.id_venda,
+                                 roupas_fk=venda['nome'],
+                                 valor_unitario=venda['valorUnitario'],
+                                 subtotal=subtotal,
+                                 qtd=venda['quantidade'])
+
+        database.session.add(item_venda)
+        database.session.commit()
+
+
+
+
+    return jsonify({'success': True, 'message': 'Venda(s) criada(s) com sucesso'})
+
 
 @app.route("/vendas", methods=['GET', 'POST'])
 @login_required
@@ -418,34 +476,24 @@ def vendas():
     table2 = Promocao.query.all()
     tipo = [{'id_promo': t.id_promo, 'tipo_pagamento': t.tipo_pagamento , 'porcentagem': t.porcentagem} for t in table2]
     if request.method == 'POST':
-        if venda_form.submit_venda.name in request.form:
-            if not venda_form.validate_on_submit():
-                try:
+        cpf = venda_form.cpf.data
+        cliente_existente = Cliente.query.filter_by(cpf=cpf).first()
+        if not cliente_existente:
+            cliente = Cliente(nome_cliente=venda_form.nome_cliente.data, cpf=venda_form.cpf.data, cashback='55', telefone=venda_form.telefone_cliente.data,data_validade_cashback='07/09/2023')
+            database.session.add(cliente)
+            database.session.commit()
+        # Verifica se o campo cashback-checkbox está marcado
+        print(request.form)
+        if not request.form.get("cashback_checkbox") == "y":
+            clientes = Cliente.query.all()
+            cashback = Cashback.query.first()
+            for cliente in clientes:
+                if float(cliente.cashback) > float(cashback.min_cashback):
+                    mensagem = f'Olá, {cliente.nome_cliente}, tudo bem? Tenho uma ótima notícia para te dar. Sua cota de cashback foi atingida com sucesso e você tem R${cliente.cashback} para gastar em produtos na nossa loja, válidos até o dia {cliente.data_validade_cashback}. Aproveite e venha para a Dripstyle reivindicar suas vantagens.'
+                    pywhatkit.sendwhatmsg_instantly(venda_form.telefone_cliente.data, mensagem)  # Substitua o número de telefone pelo número correto
+        flash('Sua foi venda concluída com sucesso', 'alert-success')
+        return redirect(url_for('vendas'))
 
-                    roupa_venda = venda_form.roupa_vendida.data
-                    estoque = Roupas.query.filter_by(nome_roupa=roupa_venda.upper()).first()
-                    if int(venda_form.qtd_estoque_venda.data) < 0:
-                        flash(f'Erro ao Vender a Roupa', 'alert-danger')
-                        return redirect(url_for('roupas'))
-                    print(estoque)
-                    if estoque:
-                        estoque.estoque -= int(venda_form.qtd_estoque_venda.data)
-                    else:
-                        flash(f'Erro ao Vender a Roupa', 'alert-danger')
-                        return redirect(url_for('roupas'))
-                    if estoque.estoque < 0:
-                        flash(f'Não é permitido Estoque negativo', 'alert-danger')
-                        return redirect(url_for('roupas'))
-                    venda = Vendas(roupas_fk=venda_form.roupa_vendida.data,
-                                   nome_cliente=venda_form.nome_cliente.data.capitalize(),
-                                 valor_venda=venda_form.valor_total.data,vendedor=current_user.usuario)
-                    database.session.add(venda)
-                    database.session.commit()
-                    flash(f'{roupa_venda} teve sua venda concluída com sucesso', 'alert-success')
-                    return redirect(url_for('roupas'))
-                except:
-                    flash(f'Erro ao Vender', 'alert-danger')
-                    return redirect(url_for('vendas'))
 
 
 
@@ -454,7 +502,20 @@ def vendas():
 @app.route("/historico", methods=['GET', 'POST'])
 @login_required
 def historico():
-    table = Vendas.query.all()
-    vendas = [{'id_venda': r.id_venda, 'roupas_fk': r.roupas_fk, 'nome_cliente': r.nome_cliente,
-               'valor_venda': r.valor_venda, 'vendedor': r.vendedor, 'data_da_venda': r.data_da_venda} for r in table]
-    return render_template('historicoVendas.html', vendas=vendas)
+    vendas = Vendas.query.all()
+    itens_venda = Itens_Venda.query.all()
+
+    vendas_data = [{'id_venda': venda.id_venda,
+                    'nome_cliente': venda.nome_cliente,
+                    'total_da_venda': venda.total_da_venda,
+                    'tipo_pagamento_fk': venda.tipo_pagamento_fk,
+                    'vendedor': venda.vendedor,
+                    'data_da_venda': venda.data_da_venda} for venda in vendas]
+
+    itens_venda_data = [{'id_itens_venda': item.id_itens_venda,
+                         'codigo_venda': item.codigo_venda,
+                         'roupas_fk': item.roupas_fk,
+                         'valor_unitario': item.valor_unitario,
+                         'subtotal': item.subtotal,
+                         'qtd': item.qtd} for item in itens_venda]
+    return render_template('historicoVendas.html', vendas=vendas_data,itens_venda=itens_venda_data)

@@ -1,3 +1,5 @@
+
+
 a{
 all: unset;
 }
@@ -14,29 +16,64 @@ all: unset;
     align-items: center;
     background-color: #000000;
     color: #fff;
-    
+
   }
-  
+  .valor-total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  margin:20px;
+
+}
+
+.valor-label {
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #555;
+}
+h3 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.valor-texto {
+  font-size: 24px;
+  font-weight: bold;
+  color: #000;
+  background-color: #fff;
+  margin-top: 15px;
+   border: 3px solid #000;
+  padding: 5px;
+  border-radius:100px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
   nav img {
     height: 80px;
     margin-left: 10px;
   }
-  
+
   .nav-links {
     display: flex;
     list-style: none;
   }
-  
+
   .nav-links li {
     margin-right: 20px;
   }
-  
+
   .nav-links a {
     color: #fff;
     text-decoration: none;
     font-size: 18px;
   }
-  
+
   body {
     background-color: #f2f2f2;
     font-family: Arial, sans-serif;
@@ -206,6 +243,7 @@ div.omrs-input-group {
 .switch__container {
   margin: 30px auto 0px auto;
   width: 50vw;
+  align-items: center;
 }
 
 .switch {
@@ -224,8 +262,8 @@ div.omrs-input-group {
 
 .switch--shadow + label {
   padding: 2px;
-  width: 120px;
-  height: 60px;
+  width: 80px;
+  height: 35px;
   background-color: #dddddd;
   border-radius: 60px;
 }
@@ -245,7 +283,7 @@ div.omrs-input-group {
   transition: background 0.4s;
 }
 .switch--shadow + label:after {
-  width: 62px;
+  width: 35px;
   background-color: #fff;
   border-radius: 100%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
@@ -255,7 +293,7 @@ div.omrs-input-group {
   background-color: #8ce196;
 }
 .switch--shadow:checked + label:after {
-  transform: translateX(60px);
+  transform: translateX(43px);
 }
 
 /* Estilo Flat */
@@ -485,8 +523,8 @@ input[type=checkbox]:checked:before {
     width: 370px;
     padding: 6px;
     margin-top: 20px;
-    
-  
+
+
   }
   #rem-roupa-btn {
     display: flex;
@@ -503,8 +541,8 @@ input[type=checkbox]:checked:before {
     width: 370px;
     padding: 6px;
     margin-top: 20px;
-    
-  
+
+
   }
     #rem-usuario-btn {
     display: flex;
@@ -579,14 +617,14 @@ input[type=checkbox]:checked:before {
 
   }
   #add-roupa-modal {
-    position: fixed; 
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); 
-    display: none; 
-    justify-content: center; 
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
     align-items: center;
   }
   #del-usuario-modal {
@@ -627,25 +665,25 @@ input[type=checkbox]:checked:before {
     max-width: 1400px;
     margin: 0 auto;
   }
-  
+
   thead {
     background-color: #333;
     color: #fff;
   }
-  
+
   th, td {
     padding: 10px;
     text-align: center;
   }
-  
+
   th {
     text-transform: uppercase;
   }
-  
+
   tbody tr:nth-child(even) {
     background-color: #f2f2f2;
   }
-  
+
   tbody tr:hover {
     background-color: #ddd;
   }
@@ -685,7 +723,7 @@ footer a:hover {
 .sidebar {
   background: rgb(0 0 0 / 80%);
   width: 70px;
-  height: 96vh;
+  height: 100vh;
   margin-bottom: 25px;
   overflow-y: scroll; /* Permite a rolagem vertical */
   position: fixed;
@@ -934,6 +972,66 @@ padding: 10px;
   .labelRoupa{
   margin-bottom: 5px;
     margin-top: 12px;
+  }
+
+  /* Estilo para o rótulo */
+  label.checkbox-container {
+    display: inline-block;
+    position: relative;
+    padding-left: 30px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+  }
+
+  /* Estilo para o checkbox */
+  label.checkbox-container input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  /* Estilo para o visual do checkbox */
+  label.checkbox-container .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 4px;
+  }
+
+  /* Estilo para o visual do checkbox quando marcado */
+  label.checkbox-container input[type="checkbox"]:checked + .checkmark {
+    background-color: #333;
+  }
+
+  /* Estilo para o visual do sinal de verificação */
+  label.checkbox-container .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  /* Estilo para exibir o sinal de verificação quando marcado */
+  label.checkbox-container input[type="checkbox"]:checked + .checkmark:after {
+    display: block;
+  }
+
+  /* Estilo para o sinal de verificação (marcado) */
+  label.checkbox-container .checkmark:after {
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
   }
 
 

@@ -1,65 +1,211 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block body %}
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+<style>
+	body {
+	  font-family: Arial, sans-serif;
+	  margin: 0;
+	  padding: 0;
+	}
 
-{% block body %}
-<div class="" style="display:flex;width: calc(100% - 70px);box-sizing: border-box;overflow-x: auto; height:70vh; margin-left:70px;margin-top:50px;align-items:flex-start; ">
-    <div class="table-wrapper" style=" width: fit-content;
-  margin-right: auto;
-  margin-left: auto;">
-<table style="width:82vw; margin:0; width: 100%;" id="clothes-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nome da Roupa</th>
-                <th>Nome do Cliente</th>
-                <th>Valor da Venda</th>
-                <th>Vendedor</th>
-                  <th>Data da Venda</th>
-              </tr>
+	.page-wrapper {
+	  padding: 100px;
+	  padding-top: 10px;
+	}
+
+	.header {
+  background-color: #fff;
+  color: #000;
+  padding: 10px;
+  padding-right: 80px;
+  padding-left: 80px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 2px solid #000;
+}
+
+	.row {
+	  display: flex;
+	  align-items: center;
+	  justify-content: space-between;
+	  margin-bottom: 10px;
+	}
+
+	.title {
+	  font-size: 24px;
+	border-bottom: 2px solid #ccc;
+	}
+
+	.filters {
+	  display: flex;
+	  align-items: center;
+	}
+
+	select {
+	  margin-right: 5px;
+	}
+
+	.search-bar {
+	  display: flex;
+	  align-items: center;
+	}
+
+	input[type="text"] {
+	  padding: 5px;
+	  margin-right: 5px;
+	}
+
+	button {
+	  padding: 5px 10px;
+	  background-color: #333;
+	  color: #fff;
+	  border: none;
+	  cursor: pointer;
+	}
+
+	.excel-button {
+	  border: 1px solid #333;
+	}
+
+	.content table {
+
+	  width: 100%;
+	  border-collapse: collapse;
+	  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.content th,
+	.content td {
+	  padding: 10px;
+	  border: 1px solid #ddd;
+	}
+
+	.content th {
+	  background-color: #f5f5f5;
+	  font-weight: bold;
+	  color: #000;
+	}
+
+
+	.content td:first-child {
+	  text-align: center;
+	}
+
+	.content td:last-child {
+	  text-align: center;
+	}
+
+	/* Estilos para ícones */
+	i.fas {
+	  font-family: "Font Awesome 5 Free";
+	}
+
+	.fa-search::before {
+	  content: "\f002";
+	}
+
+	.fa-bars::before {
+	  content: "\f0c9";
+	}
+	tr {
+	font-size: 21px;
+	}
+</style>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+<div class="page-wrapper">
+	<div class="header">
+		<div class="row">
+			<div class="title">
+				Vendas
+			</div>
+		</div>
+	</div>
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+	<div class="content">
+		<table>
+			<thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome do Cliente</th>
+                    <th>Tipo de Pagamento</th>
+                    <th>Valor da Venda</th>
+                    <th>Vendedor</th>
+                    <th>Data da Venda</th>
+                </tr>
             </thead>
             <tbody>
-                {% for r in vendas %}
+                {% for venda in vendas %}
                 <tr>
-                    <th>{{ r.id_venda }}</th>
-                    <th>{{ r.roupas_fk }}</th>
-                     <th>{{ r.nome_cliente }}</th>
-                    <th>{{ r.valor_venda }}</th>
-                     <th>{{ r.vendedor }}</th>
-                    <th>{{ r.data_da_venda.strftime('%d-%m-%Y / %H:%M') }}</th>
-
-                 {% endfor %}
+                    <td>{{ venda.id_venda }}</td>
+                    <td>{{ venda.nome_cliente }}</td>
+                    <td>{{ venda.tipo_pagamento_fk }}</td>
+                    <td>{{ venda.total_da_venda }}</td>
+                    <td>{{ venda.vendedor }}</td>
+                    <td>{{ venda.data_da_venda.strftime('%d-%m-%Y / %H:%M') }}</td>
+                </tr>
+                {% endfor %}
             </tbody>
-          </table>
+		</table>
+	</div>
 </div>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+<div class="page-wrapper">
+	<div class="header">
+		<div class="row">
+			<div class="title">
+				Itens da Venda
+			</div>
+		</div>
+	</div>
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+	<div class="content">
+		<table>
+			<thead>
+            <tr>
+                <th>ID</th>
+                <th>Codigo do Pedido</th>
+                <th>Nome da Roupa</th>
+                <th>Valor Unitario</th>
+                <th>Quantidade</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in itens_venda %}
+            <tr>
+                <td>{{ item.id_itens_venda }}</td>
+                <td>{{ item.codigo_venda }}</td>
+                <td>{{ item.roupas_fk }}</td>
+                <td>{{ item.valor_unitario }}</td>
+                <td>{{ item.qtd }}</td>
+                <td>{{ item.subtotal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+		</table>
+	</div>
 </div>
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
 <script>
-  var currentPage = 'pagina4';
+	var currentPage = 'pagina4';
 
-  // Função para manipular a barra lateral
-  function handleSidebar() {
-    var sidebarLogos = document.querySelectorAll('.sidebar-logo');
+	// Função para manipular a barra lateral
+	function handleSidebar() {
+	  var sidebarLogos = document.querySelectorAll('.sidebar-logo');
 
-    for (var i = 0; i < sidebarLogos.length; i++) {
-      var sidebarLogo = sidebarLogos[i];
+	  for (var i = 0; i < sidebarLogos.length; i++) {
+	    var sidebarLogo = sidebarLogos[i];
 
-      if (sidebarLogo.dataset.page === currentPage) {
-        sidebarLogo.classList.add('active');
-      } else {
-        sidebarLogo.classList.remove('active');
-      }
-    }
-  }
+	    if (sidebarLogo.dataset.page === currentPage) {
+	      sidebarLogo.classList.add('active');
+	    } else {
+	      sidebarLogo.classList.remove('active');
+	    }
+	  }
+	}
 
-  // Chamar a função após definir a variável currentPage
-  handleSidebar();
+	// Chamar a função após definir a variável currentPage
+	handleSidebar();
 </script>
-
-
-
-
-
-
-
-
-
 
 {% endblock %}

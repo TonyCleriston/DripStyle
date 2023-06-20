@@ -1,320 +1,372 @@
-{% extends 'base.html' %}
-
-{% block body %}
+{% extends 'base.html' %} {% block body %}
+<script src="https://kit.fontawesome.com/fdbf7dbd59.js" crossorigin="anonymous"></script>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
 <div style="display: flex;flex-direction: wrap;justify-content: center;">
-  <div style="display: flex;flex-direction: column;align-content: center;align-items: center;width: 50vw; margin: 0px;" >
-  <button id="add-roupa-btn" style="width: 562px;">Adicionar Roupa
-  <img src="{{ url_for('static', filename='wardrobe.png') }}" style="width:50px;height:50px; margin-left:10px;" alt="Texto alternativo"></button>
-  <div id="add-roupa-modal">
-    <div class="modal">
+	<div style="display: flex;flex-direction: column;align-content: center;align-items: center;width: 50vw; margin: 0px;">
+		<button id="add-roupa-btn" style="width: 562px;">
+			Adicionar Roupa
+			<img src="{{ url_for('static', filename='wardrobe.png') }}" style="width:50px;height:50px; margin-left:10px;" alt="Texto alternativo" />
+		</button>
 
-              <form id="roupa-form" class="formRoupa" method="POST" style="margin-top: 20px;width: 360px; ">
-                {{ gerenciamento.nome_roupa_adc.label(for="username", class="labelRoupa") }}
-                {{ gerenciamento.nome_roupa_adc(id="username", class="inputRoupa") }}
-
-                 {{ gerenciamento.valor.label(for="valor", class="labelRoupa") }}
-                 {{ gerenciamento.valor(id="valor", class="inputRoupa") }}
-
-                 {{ gerenciamento.tamanho.label(for="tamanho", class="labelRoupa") }}
-                 {{ gerenciamento.tamanho(id="tamanho", class="inputRoupa") }}
-
-                {{ gerenciamento.categoria.label(for="categoria",class="labelRoupa") }}
-                <select name="categoria">
-                    {% for c in categoria %}
-                <option value="{{ c.categoria }}">{{ c.categoria.lower().capitalize() }}</option>
-                {% endfor %}
-                </select>
-                  <div style="display:flex;">
-                      <div style="display:block; margin-right: 5px;">
-                {{ gerenciamento.estoque.label(for="estoque",class="labelRoupa") }}
-                 {{ gerenciamento.estoque(id="estoque", class="inputRoupa") }}
-
-                          </div>
-                      <div style="display:block;margin-left: 5px;">
-                {{ gerenciamento.min_estoque.label(for="min_estoque",class="labelRoupa") }}
-                 {{ gerenciamento.min_estoque(id="min_estoque" ,class="inputRoupa") }}
-
-                          </div>
-                      </div>
-                   {{ gerenciamento.descricao.label(for="descricao",class="labelRoupa") }}
-                 {{ gerenciamento.descricao(id="descricao") }}
-                  {{ gerenciamento.submit_adc_roupa() }}
-              </form>
-            </div>
-        </div>
-  </div>
+		<div id="add-roupa-modal" style="z-index: 1;">
+			<div class="modal">
+				<form id="roupa-form" class="formRoupa" method="POST" style="margin-top: 20px;width: 360px; ">
+					{{ gerenciamento.nome_roupa_adc.label(for="username", class="labelRoupa") }} {{ gerenciamento.nome_roupa_adc(id="username", class="inputRoupa",autocomplete="off") }} {{ gerenciamento.valor.label(for="valor",
+					class="labelRoupa") }} {{ gerenciamento.valor(id="valor", class="inputRoupa") }} {{ gerenciamento.tamanho.label(for="tamanho", class="labelRoupa") }} {{ gerenciamento.tamanho(id="tamanho", class="inputRoupa") }} {{
+					gerenciamento.categoria.label(for="categoria",class="labelRoupa") }}
+					<select name="categoria">
+						{% for c in categoria %}
+						<option value="{{ c.categoria }}">{{ c.categoria.lower().capitalize() }}</option>
+						{% endfor %}
+					</select>
+					<div style="display:flex;">
+						<div style="display:block; margin-right: 5px;">
+							{{ gerenciamento.estoque.label(for="estoque",class="labelRoupa") }} {{ gerenciamento.estoque(id="estoque", class="inputRoupa") }}
+						</div>
+						<div style="display:block;margin-left: 5px;">
+							{{ gerenciamento.min_estoque.label(for="min_estoque",class="labelRoupa") }} {{ gerenciamento.min_estoque(id="min_estoque" ,class="inputRoupa") }}
+						</div>
+					</div>
+					{{ gerenciamento.descricao.label(for="descricao",class="labelRoupa") }} {{ gerenciamento.descricao(id="descricao") }}
+					<label style="font-size:21px;font-weight:bold;" class="checkbox-container">
+						Enviar Novidade {{ gerenciamento.enviar_novidades(type="checkbox" ,id="enviar_novidades") }}
+						<span class="checkmark"></span>
+					</label>
+					{{ gerenciamento.submit_adc_roupa() }}
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
-<!--<div id="del-usuario-modal">
-    <div class="modal">
-              <form method="POST" style="margin-top: 0px;width: 360px; ">
-                {{ gerenciamento.nome_usuario_del.label(for="username2") }}
-                {{ gerenciamento.nome_usuario_del(id="username2") }}<br><br>
-                {{ gerenciamento.submit_del_usuario() }}
-              </form>
-
-        </div>
-    </div>-->
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
 <div style="display: flex;flex-direction: wrap;align-content: center;justify-content: center;">
-       <!--<div style="display: flex;flex-direction: column;align-content: center;align-items: center;width: 50vw; margin: 0px;" >
-             <button id="rem-roupa-btn" onclick="toggleFormRem()">Remover Roupa</button>
-            <div id="rem-roupa-form" style="display: none;">
-              <form method="POST" style="margin-top: 0px;width: 360px; ">
-                {{ gerenciamento.nome_roupa_del.label(for="username1") }}
-                {{ gerenciamento.nome_roupa_del(id="username1") }}<br><br>
-                 {{ gerenciamento.submit_del_roupa() }}
-              </form>
-            </div>
-        </div>-->
+	<div style="display: flex;flex-direction: column;align-content: center;align-items: center;width: 50vw; margin: 0px;">
+		<button id="add-categoria-btn" onclick="toggleFormAddCat()">Gerenciar Categoria</button>
+		<div id="add-categoria-form" style="display: none;">
+			<form method="POST" style="margin-top: 0px;width: 360px; ">
+				{{ gerenciamento.nome_categoria_add.label(for="username3") }} {{ gerenciamento.nome_categoria_add(id="username3") }}<br />
+				<br />
+				{{ gerenciamento.submit_add_categoria() }}<br />
+				<br />
 
-        <div style="display: flex;flex-direction: column;align-content: center;align-items: center;width: 50vw; margin: 0px;" >
-          <button id="add-categoria-btn" onclick="toggleFormAddCat()">Gerenciar Categoria</button>
-          <div id="add-categoria-form" style="display: none;">
-            <form method="POST" style="margin-top: 0px;width: 360px; ">
-
-              {{ gerenciamento.nome_categoria_add.label(for="username3") }}
-              {{ gerenciamento.nome_categoria_add(id="username3") }}<br><br>
-              {{ gerenciamento.submit_add_categoria() }}<br><br>
-
-                {{ gerenciamento.nome_categoria_del.label(for="username4") }}
-            {{ gerenciamento.nome_categoria_del(id="username4") }}<br><br>
-            {{ gerenciamento.submit_del_categoria() }}
-            </form>
-          </div>
-      </div>
-
-
-    <!--<div style="display: flex;flex-direction: column;align-content: center;align-items: center;width: 50vw; margin: 0px;" >
-      <button id="add-estoque-btn" onclick="toggleFormAddEst()">Gerenciar Estoque</button>
-      <div id="add-estoque-form" style="display: none;">
-        <form method="POST" style="margin-top: 0px;width: 360px; ">
-            <h2>Adicionar Estoque</h2>
-          {{ gerenciamento.nome_estoque_add.label(for="username5") }}
-          {{ gerenciamento.nome_estoque_add(id="username5") }}
-            {{ gerenciamento.qtd_estoque_add.label(for="username6") }}
-        {{ gerenciamento.qtd_estoque_add(id="username6") }}<br><br>
-          {{ gerenciamento.submit_add_estoque() }}
-            <h2 style="margin:30px;">Remover Estoque</h2>
-            {{ gerenciamento.nome_estoque_del.label(for="username7") }}
-        {{ gerenciamento.nome_estoque_del(id="username7") }}
-          {{ gerenciamento.qtd_estoque_del.label(for="username8") }}
-        {{ gerenciamento.qtd_estoque_del(id="username8") }}<br><br>
-        {{ gerenciamento.submit_del_estoque() }}
-        </form>
-      </div>
-  </div>-->
-
-    </div>
-<div style="display:flex;flex-direction: column;align-items: center;">
-<div class="search-bar" style="margin-top:13px;margin-bottom:22px;">
-  <input style="padding:7px;" type="text" id="search-input" placeholder="Pesquisar roupa" oninput="filterTable()">
+				{{ gerenciamento.nome_categoria_del.label(for="username4") }} {{ gerenciamento.nome_categoria_del(id="username4") }}<br />
+				<br />
+				{{ gerenciamento.submit_del_categoria() }}
+			</form>
+		</div>
+	</div>
 </div>
-        <table style="width: 1000px; margin:0;margin-bottom:25px;" id="clothes-table">
-            <thead>
-              <tr>
-                <th>id</th>
-                <th>Nome da Roupa</th>
-                <th>Categoria</th>
-                  <th>Valor</th>
-                <th>Estoque</th>
-                <th>Tamanho</th>
-                  <th></th>
-                  <th></th>
-              </tr>
-            </thead>
-            <tbody>
-                {% for r in roupas %}
-                <tr>
-                    <th>{{ r.id }}</th>
-                    <th>{{ r.nome_roupa }}</th>
-                     <th>{{ r.categoria }}</th>
-                    <th>R$ {{ r.valor }}</th>
-                     <th style="color: #000;font-size:23px;font-family:revert;background-color: {% if r.estoque < r.min_estoque/2 %}#f90000b5{% elif r.estoque < r.min_estoque %}yellow{% else %}#1cf11c{% endif %}">
-                            {{ r.estoque }}
-                        </th>
-                     <th>{{ r.tamanho }}</th>
-                    <th>
-                    <button style="margin:0;" id="editar-button" class="editar-button" data-id="{{ r.id }}" data-nome="{{ r.nome_roupa }}" data-valor="{{ r.valor }}" data-tamanho="{{ r.tamanho }}" data-categoria="{{ r.categoria }}" data-estoque="{{ r.estoque }}" data-descricao="{{ r.descricao }}" data-min="{{ r.min_estoque }}">EDITAR</button>
-                    </th>
-                    <th>
-                    <form style="all:unset;" action="/excluir/{{ r.id }}" method="POST">
-                        <button style="margin:0;" class="excluir-button" type="submit" data-product-name="{{r.nome_roupa}}" data-product-id="{{ r.id }}">EXCLUIR</button>
-                    </form>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+<div style="display:flex;flex-direction: column;align-items: center;">
+	<div class="search-bar" style="margin-top:13px;margin-bottom:22px;">
+		<input style="padding:7px;" type="text" id="search-input" placeholder="Pesquisar roupa" oninput="filterTable()" />
+	</div>
+	<div style="display: flex; align-items: center; margin-bottom: 20px;">
+		<h3 style="margin-right: 10px;">Legenda:</h3>
+		<div style="display: flex;">
+			<div style="display: flex; align-items: center; margin-right: 20px;">
+				<div style="width: 30px; height: 30px; background-color: #4646e9; margin-right: 10px;border: 1px solid black;"></div>
 
-                </th>
-                </tr>
-                 {% endfor %}
-            </tbody>
-          </table>
-    </div>
+				<span>Estoque Satisfeito</span>
+			</div>
+			<div style="display: flex; align-items: center; margin-right: 20px;">
+				<div style="width: 30px; height: 30px; background-color: #3a3a3a; margin-right: 10px;border: 1px solid black;"></div>
+				<img src="{{ url_for('static', filename='alerta.png') }}" style="width:30px;height:30px;" />
+				<span style="margin-left:5px;">Estoque Baixo</span>
+			</div>
+			<div style="display: flex; align-items: center;">
+				<div style="width: 30px; height: 30px; background-color: #eb0000; margin-right: 10px;border: 1px solid black;"></div>
+				<img src="{{ url_for('static', filename='alarme.png') }}" style="width:30px;height:30px;" />
+				<span style="margin-left:5px;">Estoque Crítico</span>
+			</div>
+		</div>
+	</div>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+	<script>
+		    document.addEventListener("DOMContentLoaded", function() {
+		        // Obtém os elementos HTML
+		var barcodeImage = document.getElementById("barcode-image");
+		var modal = document.getElementById("barcode-modal");
+		var closeBtn = document.getElementsByClassName("close")[0];
+		var saveBtn = document.getElementById("save-button");
+		var barcodeInput = document.getElementById("barcode-input");
 
+		// Abre o modal ao clicar na imagem do código de barras
+		barcodeImage.addEventListener("click", function() {
+		  modal.style.display = "block";
+		});
+
+		// Fecha o modal ao clicar no botão de fechar
+		closeBtn.addEventListener("click", function() {
+		  modal.style.display = "none";
+		});
+
+		// Fecha o modal ao clicar fora dele
+		window.addEventListener("click", function(event) {
+		  if (event.target == modal) {
+		    modal.style.display = "none";
+		  }
+		});
+
+		// Função chamada ao clicar no botão "Salvar"
+		saveBtn.addEventListener("click", function() {
+		  var barcodeValue = barcodeInput.value;
+		  // Faça o que desejar com o valor do código de barras (por exemplo, enviar para o servidor)
+		  alert("Código de Barras salvo: " + barcodeValue);
+
+		  // Fecha o modal
+		  modal.style.display = "none";
+		});
+		 });
+	</script>
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+	<table style="width: 1000px; margin:0;margin-bottom:25px;" id="clothes-table">
+		<thead>
+			<tr>
+				<th>id</th>
+				<th>Nome da Roupa</th>
+				<th>Categoria</th>
+				<th>Valor</th>
+				<th>Estoque</th>
+				<th>Tamanho</th>
+				<th></th>
+				<th></th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for r in roupas %}
+			<tr>
+				<th>{{ r.id }}</th>
+				<th>{{ r.nome_roupa }}</th>
+				<th>{{ r.categoria }}</th>
+				<th>R$ {{ r.valor }}</th>
+				<th style="color: #fff; font-size: 23px; font-family: revert; background-color: {% if r.estoque < r.min_estoque/2 %}#eb0000{% elif r.estoque < r.min_estoque %}#3a3a3a{% else %}#4646e9{% endif %}; position: relative;">
+					{% if r.estoque < r.min_estoque/2 %}
+					<img src="{{ url_for('static', filename='alarme.png') }}" style="position: absolute; top: 0; right: 0;" />
+					{% elif r.estoque < r.min_estoque %}
+					<img src="{{ url_for('static', filename='alerta.png') }}" style="position: absolute; top: 0; right: 0;" />
+					{% endif %} {{ r.estoque }}
+				</th>
+				<th>{{ r.tamanho }}</th>
+				<th>
+					<button
+						style="margin:0;width:46px;height:46px;"
+						id="editar-button"
+						class="editar-button"
+						data-id="{{ r.id }}"
+						data-nome="{{ r.nome_roupa }}"
+						data-valor="{{ r.valor }}"
+						data-tamanho="{{ r.tamanho }}"
+						data-categoria="{{ r.categoria }}"
+						data-estoque="{{ r.estoque }}"
+						data-descricao="{{ r.descricao }}"
+						data-min="{{ r.min_estoque }}"
+					>
+						<i class="fas fa-edit" aria-hidden="true"></i>
+					</button>
+				</th>
+				<th>
+					<form style="all:unset;" action="/excluir/{{ r.id }}" method="POST">
+						<button style="margin:0;" class="excluir-button" type="submit" data-product-name="{{r.nome_roupa}}" data-product-id="{{ r.id }}"><i class="fa fa-times fa-2x" aria-hidden="true"></i></button>
+					</form>
+				</th>
+				<th><img src="{{ url_for('static', filename='leitura-de-codigo-de-barras.png') }}" id="barcode-image" style="width:40px; height:40px;" /></th>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+<div id="barcode-modal" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.4);" class="modal">
+	<div class="barcode-container" style="display: flex;align-items: center;margin-right: 10px;justify-content: center;">
+		<div
+			class="barcode-image-container"
+			style="background-color: #fff;box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);border: 10px solid #ccc;padding: 10px;height: 100%;display: flex;flex-direction: column;align-items: center;justify-content: center;margin-right: 10px;"
+		>
+			<h3 style="text-align: center;margin-bottom: 10px;font-weight: bold;">
+				Aponte o leitor <br />
+				do código de barras
+			</h3>
+			<img src="https://play-lh.googleusercontent.com/os72icmFlDtbxpYbZCP-v6kOereSLGDmlKsBl1ISTPdgbcpoc4rSIuXDuoDECvgcvoFJ" style="margin-top: 10px;width: 100px; height: 100px;" />
+		</div>
+		<div class="modal-content" style="background-color: #fefefe; margin: 15%;margin-left:0; padding: 20px; border: 1px solid #888; width: 50%; max-width: 420px;border: 10px solid #ccc;">
+			<span class="close" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+			<h3 style="width:500px;">Digite o código de barras do produto</h3>
+			<input style="margin-top: 10px; width: 100%; box-sizing: border-box;" type="text" id="barcode-input" placeholder="Digite o código de barras" />
+			<button style="background-color: #4CAF50; color: white; padding: 8px 12px; border: none; cursor: pointer;" id="save-button">Salvar</button>
+		</div>
+	</div>
+</div>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
 <script>
-  function filterTable() {
-    var input = document.getElementById("search-input").value.toLowerCase();
-    var table = document.getElementById("clothes-table");
-    var rows = table.getElementsByTagName("tr");
+	function filterTable() {
+	  var input = document.getElementById("search-input").value.toLowerCase();
+	  var table = document.getElementById("clothes-table");
+	  var rows = table.getElementsByTagName("tr");
 
-    for (var i = 1; i < rows.length; i++) {
-      var row = rows[i];
-      var name = row.cells[1].textContent.toLowerCase();
+	  for (var i = 1; i < rows.length; i++) {
+	    var row = rows[i];
+	    var name = row.cells[1].textContent.toLowerCase();
 
-      if (name.indexOf(input) > -1) {
-        row.style.display = "";
-      } else {
-        row.style.display = "none";
-      }
-    }
-  }
+	    if (name.indexOf(input) > -1) {
+	      row.style.display = "";
+	    } else {
+	      row.style.display = "none";
+	    }
+	  }
+	}
 </script>
 <script>
-var submitBtn = document.getElementById("submit_adc_roupa");
- var editarBtn = document.querySelectorAll('.editar-button');
-var addRoupaModal = document.getElementById("add-roupa-modal");
- const editarButtons = document.querySelectorAll('.editar-button');
-const roupasForm = document.getElementById('roupa-form');
-function toggleModalEdit() {
-  addRoupaModal.style.display = (addRoupaModal.style.display == "none") ? "flex" : "none";
-  addRoupaModal.style.display = "flex";
-}
-document.addEventListener('click', function(event) {
-  var modal = document.getElementById('add-roupa-modal');
-  if (submitBtn.classList.contains('submit-editar-roupa')) {
-    if (event.target == modal) {
-    modal.style.display = "none";
-    var inputs = document.querySelectorAll('#add-roupa-modal input');
-    inputs.forEach(function(input) {
-      input.value = '';
-    });
-    }
+	var submitBtn = document.getElementById("submit_adc_roupa");
+	 var editarBtn = document.querySelectorAll('.editar-button');
+	var addRoupaModal = document.getElementById("add-roupa-modal");
+	 const editarButtons = document.querySelectorAll('.editar-button');
+	const roupasForm = document.getElementById('roupa-form');
+	function toggleModalEdit() {
+	  addRoupaModal.style.display = (addRoupaModal.style.display == "none") ? "flex" : "none";
+	  addRoupaModal.style.display = "flex";
+	}
+	document.addEventListener('click', function(event) {
+	  var modal = document.getElementById('add-roupa-modal');
+	  if (submitBtn.classList.contains('submit-editar-roupa')) {
+	    if (event.target == modal) {
+	    modal.style.display = "none";
+	    var inputs = document.querySelectorAll('#add-roupa-modal input');
+	    inputs.forEach(function(input) {
+	      input.value = '';
+	    });
+	    }
 
-    }
-});
-
-
-editarButtons.forEach(button => {
-    button.addEventListener('click', function() {
-    const id = this.dataset.id;
-      const nome = this.dataset.nome;
-      const valor = this.dataset.valor;
-      const tamanho = this.dataset.tamanho;
-      const categoria = this.dataset.categoria;
-      const estoque = this.dataset.estoque;
-      const min = this.dataset.min;
-      const descricao = this.dataset.descricao;
-
-      // Preencha o formulário com as informações da roupa
-      roupasForm.elements.nome_roupa_adc.value = nome;
-      roupasForm.elements.valor.value = valor;
-      roupasForm.elements.tamanho.value = tamanho;
-      roupasForm.elements.categoria.value = categoria;
-      roupasForm.elements.estoque.value = estoque;
-      roupasForm.elements.min_estoque.value = min;
-      roupasForm.elements.descricao.value = descricao;
-
-      toggleModalEdit();
-
-      submitBtn.classList.add('submit-editar-roupa');
-      submitBtn.setAttribute('name', 'editar_roupa');
-      submitBtn.setAttribute('value', 'Editar');
+	    }
+	});
 
 
-submitBtn.addEventListener("click", function() {
-  var roupaId = id
+	editarButtons.forEach(button => {
+	    button.addEventListener('click', function() {
+	    const id = this.dataset.id;
+	      const nome = this.dataset.nome;
+	      const valor = this.dataset.valor;
+	      const tamanho = this.dataset.tamanho;
+	      const categoria = this.dataset.categoria;
+	      const estoque = this.dataset.estoque;
+	      const min = this.dataset.min;
+	      const descricao = this.dataset.descricao;
 
-  if (submitBtn.classList.contains('submit-editar-roupa')) {
-    roupasForm.setAttribute('action', '/editar/' + roupaId);
-    roupasForm.setAttribute('method', 'POST');
-    roupasForm.submit();
-  }
-});
-    });
-  });
+	      // Preencha o formulário com as informações da roupa
+	      roupasForm.elements.nome_roupa_adc.value = nome;
+	      roupasForm.elements.valor.value = valor;
+	      roupasForm.elements.tamanho.value = tamanho;
+	      roupasForm.elements.categoria.value = categoria;
+	      roupasForm.elements.estoque.value = estoque;
+	      roupasForm.elements.min_estoque.value = min;
+	      roupasForm.elements.descricao.value = descricao;
+
+	      toggleModalEdit();
+
+	      submitBtn.classList.add('submit-editar-roupa');
+	      submitBtn.setAttribute('name', 'editar_roupa');
+	      submitBtn.setAttribute('value', 'Editar');
+
+
+	submitBtn.addEventListener("click", function() {
+	  var roupaId = id
+
+	  if (submitBtn.classList.contains('submit-editar-roupa')) {
+	    roupasForm.setAttribute('action', '/editar/' + roupaId);
+	    roupasForm.setAttribute('method', 'POST');
+	    roupasForm.submit();
+	  }
+	});
+	    });
+	  });
 </script>
 <script>
-   // Captura o clique no botão de exclusão
-const deleteButtons = document.querySelectorAll('.excluir-button');
+	   // Captura o clique no botão de exclusão
+	const deleteButtons = document.querySelectorAll('.excluir-button');
 
-deleteButtons.forEach(button => {
-    button.addEventListener('click', function() {
-        event.preventDefault();
-        const productName = this.dataset.productName;
-        const productId = this.dataset.productId;
-    const url = `/excluir/${productId}`;
+	deleteButtons.forEach(button => {
+	    button.addEventListener('click', function() {
+	        event.preventDefault();
+	        const productName = this.dataset.productName;
+	        const productId = this.dataset.productId;
+	    const url = `/excluir/${productId}`;
 
-        // Cria o pop-up
-        const popupContainer = document.createElement('div');
-        popupContainer.classList.add('popup-container');
+	        // Cria o pop-up
+	        const popupContainer = document.createElement('div');
+	        popupContainer.classList.add('popup-container');
 
-        const popup = document.createElement('div');
-        popup.classList.add('popup');
+	        const popup = document.createElement('div');
+	        popup.classList.add('popup');
 
-        const message = document.createElement('p');
-        message.textContent = 'Deseja realmente excluir ';
+	        const message = document.createElement('p');
+	        message.textContent = 'Deseja realmente excluir ';
 
-        const productNameElement = document.createElement('span');
-        productNameElement.textContent = productName.charAt(0).toUpperCase() + productName.slice(1).toLowerCase();
-        productNameElement.style.fontWeight = 'bold';
+	        const productNameElement = document.createElement('span');
+	        productNameElement.textContent = productName.charAt(0).toUpperCase() + productName.slice(1).toLowerCase();
+	        productNameElement.style.fontWeight = 'bold';
 
-        message.appendChild(productNameElement);
-        message.appendChild(document.createTextNode('?'));
+	        message.appendChild(productNameElement);
+	        message.appendChild(document.createTextNode('?'));
 
-        const buttonsContainer = document.createElement('div');
-        buttonsContainer.classList.add('popup-buttons');
+	        const buttonsContainer = document.createElement('div');
+	        buttonsContainer.classList.add('popup-buttons');
 
-        const confirmButton = document.createElement('button');
-        confirmButton.textContent = 'Confirmar';
-        confirmButton.classList.add('confirm-button');
+	        const confirmButton = document.createElement('button');
+	        confirmButton.textContent = 'Confirmar';
+	        confirmButton.classList.add('confirm-button');
 
-        const cancelButton = document.createElement('button');
-        cancelButton.textContent = 'Cancelar';
-        cancelButton.classList.add('cancel-button');
+	        const cancelButton = document.createElement('button');
+	        cancelButton.textContent = 'Cancelar';
+	        cancelButton.classList.add('cancel-button');
 
-        // Manipula o clique no botão "Confirmar"
-        confirmButton.addEventListener('click', function() {
-            const form = button.closest('form');
-      form.action = url;
-      form.submit();
-        });
+	        // Manipula o clique no botão "Confirmar"
+	        confirmButton.addEventListener('click', function() {
+	            const form = button.closest('form');
+	      form.action = url;
+	      form.submit();
+	        });
 
-        // Manipula o clique no botão "Cancelar"
-        cancelButton.addEventListener('click', function() {
-            // Remove o pop-up
-            document.body.removeChild(popupContainer);
-        });
+	        // Manipula o clique no botão "Cancelar"
+	        cancelButton.addEventListener('click', function() {
+	            // Remove o pop-up
+	            document.body.removeChild(popupContainer);
+	        });
 
-        // Monta a estrutura do pop-up
-        buttonsContainer.appendChild(confirmButton);
-        buttonsContainer.appendChild(cancelButton);
+	        // Monta a estrutura do pop-up
+	        buttonsContainer.appendChild(confirmButton);
+	        buttonsContainer.appendChild(cancelButton);
 
-        popup.appendChild(message);
-        popup.appendChild(buttonsContainer);
+	        popup.appendChild(message);
+	        popup.appendChild(buttonsContainer);
 
-        popupContainer.appendChild(popup);
+	        popupContainer.appendChild(popup);
 
-        // Adiciona o pop-up ao corpo do documento
-        document.body.appendChild(popupContainer);
-    });
-});
+	        // Adiciona o pop-up ao corpo do documento
+	        document.body.appendChild(popupContainer);
+	    });
+	});
 </script>
 <script>
-  var currentPage = 'pagina2';
+	var currentPage = 'pagina2';
 
-  // Função para manipular a barra lateral
-  function handleSidebar() {
-    var sidebarLogos = document.querySelectorAll('.sidebar-logo');
+	// Função para manipular a barra lateral
+	function handleSidebar() {
+	  var sidebarLogos = document.querySelectorAll('.sidebar-logo');
 
-    for (var i = 0; i < sidebarLogos.length; i++) {
-      var sidebarLogo = sidebarLogos[i];
+	  for (var i = 0; i < sidebarLogos.length; i++) {
+	    var sidebarLogo = sidebarLogos[i];
 
-      if (sidebarLogo.dataset.page === currentPage) {
-        sidebarLogo.classList.add('active');
-      } else {
-        sidebarLogo.classList.remove('active');
-      }
-    }
-  }
+	    if (sidebarLogo.dataset.page === currentPage) {
+	      sidebarLogo.classList.add('active');
+	    } else {
+	      sidebarLogo.classList.remove('active');
+	    }
+	  }
+	}
 
-  // Chamar a função após definir a variável currentPage
-  handleSidebar();
+	// Chamar a função após definir a variável currentPage
+	handleSidebar();
 </script>
-   
+
 {% endblock %}
